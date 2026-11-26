@@ -1,0 +1,2629 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#FFF5F8" />
+  <title>Đọc B1 • Học Thuộc Pink Edition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            ios: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Rounded"', '"SF Pro Text"', '"Segoe UI"', 'Roboto', 'sans-serif']
+          },
+          colors: {
+            sakuraBg: '#FFF5F8',
+            sakuraCard: '#FFFFFF',
+            sakuraBorder: '#FBCFE8',
+            sakuraSoft: '#FCE7F3',
+            sakuraPrimary: '#EC4899',
+            sakuraLight: '#F472B6',
+            sakuraText: '#3B162B',
+            sakuraMuted: '#8E5B74',
+            berryBg: '#1A0F16',
+            berryCard: '#261620',
+            berryBorder: '#422536',
+            berrySoft: '#3A1F30',
+            berryText: '#FDF2F8',
+            berryMuted: '#C79BB3',
+            mintText: '#059669',
+            mintBg: '#ECFDF5',
+            mintBorder: '#6EE7B7',
+            coralText: '#DC2626',
+            coralBg: '#FEF2F2',
+            coralBorder: '#FCA5A5'
+          },
+          boxShadow: {
+            rose: '0 8px 24px rgba(236, 72, 153, 0.08)',
+            roseMd: '0 10px 28px rgba(236, 72, 153, 0.16)',
+            roseGlow: '0 6px 18px rgba(236, 72, 153, 0.30)'
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root {
+      --ease-silky: cubic-bezier(0.22, 1, 0.36, 1);
+      --badge-clearance: 54px;
+    }
+    html.no-badge-clearance {
+      --badge-clearance: 0px;
+    }
+    * {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      overscroll-behavior: none;
+    }
+    .app-shell {
+      height: 100dvh;
+      max-width: 430px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .safe-top {
+      padding-top: max(12px, env(safe-area-inset-top));
+    }
+    .safe-bottom {
+      padding-bottom: calc(var(--badge-clearance) + max(10px, env(safe-area-inset-bottom, 0px)));
+    }
+    .safe-bottom-sheet {
+      padding-bottom: calc(var(--badge-clearance) + max(24px, env(safe-area-inset-bottom, 0px)));
+    }
+    .toast-float {
+      bottom: calc(82px + var(--badge-clearance) + env(safe-area-inset-bottom, 0px));
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .pink-gradient {
+      background: linear-gradient(135deg, #F472B6, #EC4899);
+    }
+    .pink-gradient-soft {
+      background: linear-gradient(135deg, #FFF0F6, #FCE7F3);
+    }
+    .dark .pink-gradient-soft {
+      background: linear-gradient(135deg, #331929, #261620);
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(22px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-22px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes popCorrect {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.025); }
+      100% { transform: scale(1); }
+    }
+    @keyframes shakeWrong {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+    .anim-view {
+      animation: fadeSlideUp 0.28s var(--ease-silky) both;
+    }
+    .anim-next {
+      animation: slideInRight 0.24s var(--ease-silky) both;
+    }
+    .anim-prev {
+      animation: slideInLeft 0.24s var(--ease-silky) both;
+    }
+    .anim-correct {
+      animation: popCorrect 0.3s var(--ease-silky);
+    }
+    .anim-wrong {
+      animation: shakeWrong 0.34s ease-in-out;
+    }
+    .drawer-sheet {
+      transform: translateY(105%);
+      transition: transform 0.34s var(--ease-silky);
+    }
+    .drawer-sheet.open {
+      transform: translateY(0%);
+    }
+    .drawer-backdrop {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.26s ease;
+    }
+    .drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .acc-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.32s var(--ease-silky);
+    }
+    .acc-body.open {
+      grid-template-rows: 1fr;
+    }
+    .acc-inner {
+      overflow: hidden;
+    }
+    .pink-switch {
+      position: relative;
+      width: 46px;
+      height: 26px;
+      border-radius: 999px;
+      transition: background-color 0.25s var(--ease-silky);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .pink-switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      box-shadow: 0 2px 5px rgba(59, 22, 43, 0.2);
+      transition: transform 0.25s var(--ease-silky);
+    }
+    .pink-switch.active {
+      background: linear-gradient(135deg, #F472B6, #EC4899);
+    }
+    .pink-switch.active::after {
+      transform: translateX(20px);
+    }
+    .fs-sm .q-prompt { font-size: 14px; line-height: 1.55; }
+    .fs-sm .q-opt { font-size: 13.5px; }
+    .fs-md .q-prompt { font-size: 15.5px; line-height: 1.6; }
+    .fs-md .q-opt { font-size: 14.5px; }
+    .fs-lg .q-prompt { font-size: 17.5px; line-height: 1.6; }
+    .fs-lg .q-opt { font-size: 16px; }
+  </style>
+</head>
+<body class="bg-pink-100/70 dark:bg-[#11080E] text-sakuraText dark:text-berryText antialiased selection:bg-pink-200 dark:selection:bg-pink-900">
+
+  <!-- iPhone 13 Frame Shell -->
+  <div id="app" class="app-shell bg-sakuraBg dark:bg-berryBg sm:shadow-2xl sm:border-x sm:border-sakuraBorder dark:sm:border-berryBorder fs-md">
+
+    <!-- Top Glassmorphic Navigation Bar -->
+    <header id="top-bar" class="safe-top px-4 pb-3 bg-white/85 dark:bg-berryCard/85 backdrop-blur-xl border-b border-sakuraBorder/80 dark:border-berryBorder flex items-center justify-between gap-2 z-20 shrink-0 transition-colors">
+      <div class="flex items-center gap-1.5 min-w-0">
+        <button id="btn-back" onclick="exitQuizSession()" class="hidden -ml-2 px-2 py-1.5 rounded-full text-sakuraPrimary dark:text-sakuraLight active:scale-90 transition flex items-center gap-0.5 font-bold text-[14.5px] shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          <span>Quay lại</span>
+        </button>
+        <div id="header-title-wrap" class="truncate">
+          <h1 id="header-title" class="text-[18px] font-extrabold tracking-tight truncate flex items-center gap-1.5">Đọc B1 • Học Thuộc 🌸</h1>
+          <p id="header-sub" class="text-[11.5px] font-medium text-sakuraMuted dark:text-berryMuted truncate">305 câu chuẩn đề cương</p>
+        </div>
+        <button id="btn-quick-switch" onclick="openQuickSwitcher()" class="hidden px-3 py-1.5 rounded-full bg-sakuraSoft dark:bg-berrySoft border border-sakuraBorder dark:border-berryBorder text-sakuraPrimary dark:text-sakuraLight font-extrabold text-[12.5px] active:scale-95 transition flex items-center gap-1 max-w-[175px] truncate">
+          <span id="quick-switch-label" class="truncate">Part 1 • Đề 1</span>
+          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <div id="exam-timer" class="hidden px-2.5 py-1 rounded-full bg-coralBg dark:bg-red-950/60 border border-coralBorder/80 dark:border-red-800 text-coralText dark:text-red-300 font-black text-[12.5px] tabular-nums">45:00</div>
+        <button id="btn-theme" onclick="toggleTheme()" aria-label="Đổi giao diện Sáng/Tối" class="w-9 h-9 rounded-full bg-sakuraSoft dark:bg-berrySoft text-sakuraPrimary dark:text-sakuraLight flex items-center justify-center active:scale-90 transition shrink-0">
+          <svg id="icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          <svg id="icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Scrollable Viewport -->
+    <main id="main-content" class="flex-1 overflow-y-auto no-scrollbar relative"></main>
+
+    <!-- Bottom iOS Glassmorphic Tab Bar (4 Tabs) -->
+    <nav id="tab-bar" class="safe-bottom bg-white/88 dark:bg-berryCard/90 backdrop-blur-xl border-t border-sakuraBorder/80 dark:border-berryBorder grid grid-cols-4 pt-2 px-1.5 shrink-0 z-20 transition-colors">
+      <button data-tab="home" onclick="switchTab('home')" class="tab-btn flex flex-col items-center justify-center gap-0.5 py-1 text-sakuraPrimary dark:text-sakuraLight transition active:scale-90">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        <span class="text-[10.5px] font-bold">Học Thuộc</span>
+      </button>
+      <button data-tab="wrong" onclick="switchTab('wrong')" class="tab-btn flex flex-col items-center justify-center gap-0.5 py-1 text-sakuraMuted/70 dark:text-berryMuted/70 transition active:scale-90 relative">
+        <div class="relative">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+          <span id="badge-wrong" class="hidden absolute -top-1.5 -right-2.5 min-w-[18px] h-[18px] px-1 rounded-full pink-gradient text-white text-[10px] font-extrabold flex items-center justify-center shadow-xs">0</span>
+        </div>
+        <span class="text-[10.5px] font-bold">Câu Sai</span>
+      </button>
+      <button data-tab="exam" onclick="switchTab('exam')" class="tab-btn flex flex-col items-center justify-center gap-0.5 py-1 text-sakuraMuted/70 dark:text-berryMuted/70 transition active:scale-90">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        <span class="text-[10.5px] font-bold">Thi Thử</span>
+      </button>
+      <button data-tab="settings" onclick="switchTab('settings')" class="tab-btn flex flex-col items-center justify-center gap-0.5 py-1 text-sakuraMuted/70 dark:text-berryMuted/70 transition active:scale-90">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.1" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span class="text-[10.5px] font-bold">Cài Đặt</span>
+      </button>
+    </nav>
+
+    <!-- Bottom Sheet Drawer: Reading Passage -->
+    <div id="passage-backdrop" class="drawer-backdrop fixed inset-0 bg-[#3B162B]/40 backdrop-blur-[3px] z-40 max-w-[430px] mx-auto" onclick="closePassageSheet()"></div>
+    <div id="passage-sheet" class="drawer-sheet fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white dark:bg-berryCard rounded-t-[26px] shadow-2xl border-t border-sakuraBorder dark:border-berryBorder z-50 max-h-[82dvh] flex flex-col">
+      <div id="passage-handle" class="pt-3 pb-2.5 px-5 border-b border-sakuraBorder/60 dark:border-berryBorder flex flex-col items-center shrink-0 cursor-grab">
+        <div class="w-11 h-1.5 rounded-full bg-pink-200 dark:bg-berryBorder mb-2.5"></div>
+        <div class="w-full flex items-center justify-between gap-2">
+          <h3 id="passage-title" class="font-extrabold text-[15.5px] text-sakuraText dark:text-berryText truncate">Bài đọc</h3>
+          <button onclick="closePassageSheet()" class="px-3.5 py-1.5 rounded-full bg-sakuraSoft dark:bg-berrySoft text-sakuraPrimary dark:text-sakuraLight font-bold text-[12.5px] active:scale-95 transition shrink-0">Đóng</button>
+        </div>
+      </div>
+      <div id="passage-body" class="p-5 overflow-y-auto text-[14.5px] leading-relaxed text-sakuraText dark:text-berryText space-y-3 safe-bottom-sheet"></div>
+    </div>
+
+    <!-- Bottom Sheet Drawer: Question Navigator Grid -->
+    <div id="qmap-backdrop" class="drawer-backdrop fixed inset-0 bg-[#3B162B]/40 backdrop-blur-[3px] z-40 max-w-[430px] mx-auto" onclick="closeQMap()"></div>
+    <div id="qmap-sheet" class="drawer-sheet fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white dark:bg-berryCard rounded-t-[26px] shadow-2xl border-t border-sakuraBorder dark:border-berryBorder z-50 max-h-[75dvh] flex flex-col">
+      <div class="pt-3 pb-2.5 px-5 border-b border-sakuraBorder/60 dark:border-berryBorder flex flex-col items-center shrink-0">
+        <div class="w-11 h-1.5 rounded-full bg-pink-200 dark:bg-berryBorder mb-2.5"></div>
+        <div class="w-full flex items-center justify-between">
+          <div>
+            <h3 class="font-extrabold text-[15.5px]">Danh sách câu hỏi</h3>
+            <p id="qmap-sub" class="text-[11.5px] text-sakuraMuted dark:text-berryMuted">Chạm để nhảy nhanh tới câu bất kỳ</p>
+          </div>
+          <button onclick="closeQMap()" class="px-3.5 py-1.5 rounded-full bg-sakuraSoft dark:bg-berrySoft text-sakuraPrimary dark:text-sakuraLight font-bold text-[12.5px] active:scale-95 transition">Đóng</button>
+        </div>
+      </div>
+      <div id="qmap-grid" class="p-4 overflow-y-auto grid grid-cols-5 gap-2.5 safe-bottom-sheet"></div>
+    </div>
+
+    <!-- Bottom Sheet Drawer: Quick Part / Test Switcher (Inside Quiz) -->
+    <div id="switcher-backdrop" class="drawer-backdrop fixed inset-0 bg-[#3B162B]/40 backdrop-blur-[3px] z-40 max-w-[430px] mx-auto" onclick="closeQuickSwitcher()"></div>
+    <div id="switcher-sheet" class="drawer-sheet fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white dark:bg-berryCard rounded-t-[26px] shadow-2xl border-t border-sakuraBorder dark:border-berryBorder z-50 max-h-[82dvh] flex flex-col">
+      <div class="pt-3 pb-2.5 px-5 border-b border-sakuraBorder/60 dark:border-berryBorder flex flex-col items-center shrink-0">
+        <div class="w-11 h-1.5 rounded-full bg-pink-200 dark:bg-berryBorder mb-2.5"></div>
+        <div class="w-full flex items-center justify-between">
+          <div>
+            <h3 class="font-extrabold text-[15.5px]">Đổi nhanh Part / Đề 🌸</h3>
+            <p class="text-[11.5px] text-sakuraMuted dark:text-berryMuted">Chuyển ngay sang Part hoặc Đề bất kỳ</p>
+          </div>
+          <button onclick="closeQuickSwitcher()" class="px-3.5 py-1.5 rounded-full bg-sakuraSoft dark:bg-berrySoft text-sakuraPrimary dark:text-sakuraLight font-bold text-[12.5px] active:scale-95 transition">Đóng</button>
+        </div>
+      </div>
+      <div id="switcher-body" class="p-4 overflow-y-auto space-y-3 safe-bottom-sheet"></div>
+    </div>
+
+    <!-- Custom iOS Pink Confirm Modal -->
+    <div id="modal-backdrop" class="hidden fixed inset-0 bg-[#3B162B]/45 backdrop-blur-[3px] z-50 flex items-center justify-center p-6 max-w-[430px] mx-auto">
+      <div class="anim-view w-full max-w-[310px] bg-white/95 dark:bg-berryCard/95 backdrop-blur-xl rounded-[22px] overflow-hidden shadow-2xl border border-sakuraBorder dark:border-berryBorder text-center">
+        <div class="p-5">
+          <h3 id="modal-title" class="font-extrabold text-[17px] mb-1.5">Xác nhận</h3>
+          <p id="modal-msg" class="text-[13.5px] text-sakuraMuted dark:text-berryMuted leading-snug"></p>
+        </div>
+        <div class="grid grid-cols-2 border-t border-sakuraBorder/70 dark:border-berryBorder">
+          <button id="modal-cancel" class="py-3.5 text-[15.5px] font-bold text-sakuraMuted dark:text-berryMuted border-r border-sakuraBorder/70 dark:border-berryBorder active:bg-sakuraSoft/50 dark:active:bg-berrySoft">Huỷ</button>
+          <button id="modal-ok" class="py-3.5 text-[15.5px] font-extrabold text-sakuraPrimary dark:text-sakuraLight active:bg-sakuraSoft/50 dark:active:bg-berrySoft">Đồng ý</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Toast Notification -->
+    <div id="toast" class="toast-float pointer-events-none opacity-0 translate-y-2 transition-all duration-200 fixed left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-sakuraText/92 dark:bg-sakuraPrimary text-white text-[13px] font-bold shadow-roseMd whitespace-nowrap"></div>
+
+  </div>
+
+<script>
+// ============================================================================
+// 1. COMPLETE B1 READING DATASET (305 QUESTIONS EXACTLY FROM CURRICULUM PDF)
+// ============================================================================
+const PASSAGES = {
+  // PART 2 PASSAGES
+  p2_1: {
+    title: "Part 2 • Đề 1: Beaches (A–E)",
+    text: `<p><b>A. Silver Sands:</b> This beach has a sea temperature slightly higher than other coastal areas, and with its gentle waves it's perfect for children. There's plenty to do, too, with play leaders offering games to entertain younger ones, and surfing and sailing available at all levels, including beginners. The snack bar is excellent, too.</p>
+    <p><b>B. Minton Strand:</b> The sea here offers safe swimming and sailing, even for beginners, but there's still plenty to do when you want a change from sunbathing. A teenagers' beach club offers sports like cycle rides, volleyball and beach chess — great for everyone getting to know each other!</p>
+    <p><b>C. Holly Bay:</b> The café here serves delicious meals and sandwiches! The water's calm in the bay, perfect for people wanting to swim across it — around 2 km! However, it's very deep, so is only suitable for strong swimmers. There are often sand artists here, and horses for hire to take you along the beach.</p>
+    <p><b>D. South Beach:</b> This beautiful beach offers safe swimming. And when you fancy a change from sunbathing or watersports, there's a funfair nearby, and beautiful gardens to walk through, with tables and chairs where you can eat your own food. Leave your car by the gardens, and you'll be on the beach almost immediately.</p>
+    <p><b>E. Bar Mouth Beach:</b> This beach often has displays of animals and birds skillfully made from sand, which you can also learn how to do. It's also the perfect place for lying in the sun — or why not explore the beach paths on foot for an hour or two? The views are fantastic.</p>`
+  },
+  p2_2: {
+    title: "Part 2 • Đề 2: Film Studios (A–E)",
+    text: `<p><b>A. Grand Studios:</b> Come and visit amazingly realistic sets, from the streets of New York to the historical sites of Rome — and walk around them. The tour also includes a bus ride to places in the surrounding area which have appeared in films, with a staff member to tell you whatever you'd like to know.</p>
+    <p><b>B. West Ways:</b> To visit this studio, get tickets in advance through the website, to avoid long queues — it's very popular with people who love top movies from the 40s, many of which were filmed here. The studio also has a great selection of items from various movies, now on sale as souvenirs!</p>
+    <p><b>C. Waverley Studios:</b> These studios are huge, with plenty of space for displaying the scenery and stages where big stars acted in scenes from famous films. Check the website to see exactly what the studio offers inside. And because you're not shown around in groups, you can spend as much time there as you want!</p>
+    <p><b>D. Movie World:</b> Many famous movies from the last century were made in these studios, and you can still see the costumes worn in them, and the original sets used in the films. There's a useful digital guide you can buy here, so you'll find your way through these studios really quickly!</p>
+    <p><b>E. Film Park:</b> Film Park has an amazing collection of old cars once used in films — and they still work! So, have a trip in one and see the studios as you're driven around its huge city street scenes. There's also a collection of original clothes that stars were dressed in for their movies. Visitors get free photos of themselves as they leave.</p>`
+  },
+  p2_3: {
+    title: "Part 2 • Đề 3: Animated Films (A–E)",
+    text: `<p><b>A. Terry:</b> The pop music in this film is great, as it features the voices of top performers. The film follows a friendly tiger in the jungle, who becomes a hero to his friends. This film first came out in the 70s, and the graphics in this beautiful film have changed very little.</p>
+    <p><b>B. Constanz:</b> This beautiful film, with simple graphics, is based on the well-known novel, which has become very popular in school classrooms. Although it's full of comedy situations and surprises from beginning to end, the film also has a serious message, and will leave you with something to think about after you've watched it.</p>
+    <p><b>C. Magic Makers:</b> This is a gentle film about a village of animals who all help each other through life — but things don't always go at all as they expected. In fact, they're usually far better! A beautiful, funny film with great songs you won't forget. You'll never get tired of watching it!</p>
+    <p><b>D. Imagining:</b> While you're watching this beautiful film, you'll also be entertained by the wonderful piano and violin music that accompanies it. It's a film for the whole family, including young children, to sit down and see together. And everyone will find that they have something in common with the people in the film.</p>
+    <p><b>E. Roundabout:</b> The pictures are so fantastic, they almost need nothing more than the piano music that accompanies them. The film focuses on some brave friends who come together to support each other in various ways, and the well-known performers saying their words bring something really special to it. The film has lots to teach teenagers.</p>`
+  },
+  p2_4: {
+    title: "Part 2 • Đề 4: Geography Websites (A–E)",
+    text: `<p><b>A. Geographical:</b> This website has lots of maps, quizzes and advice, to check your knowledge of what you've studied — and remind you of anything you've forgotten! There's a brilliant section about popular places in many different countries, which attract large numbers of visitors, with background historical details about the reasons these places are now so well known.</p>
+    <p><b>B. Planet Zoom:</b> Not sure how to understand the information included on maps? Here's a step-by-step guide to using them! The site also has games and puzzles about all the continents, including Africa, Asia and Europe, and important details about them, such as their huge size, and their mountain ranges, rivers and climate.</p>
+    <p><b>C. Geo watch:</b> What's underneath the ground we walk on? You'll find maps and diagrams here to tell you — including what you'd see inside the planet if you cut it in half! There's information, too, about parts of the world that aren't land, but actually oceans and seas, and help on researching and presenting project information.</p>
+    <p><b>D. Worldwide:</b> This website has lots of beautiful photos, maps and film clips to help you learn more about some of the highest — and coldest — peaks on the planet. You'll find plenty of amazing facts about them, together with details of the wildlife that makes its home in the surrounding areas.</p>
+    <p><b>E. Go world:</b> How do people live in places with very high or low temperatures in different seasons? Find out how people adapt to the climate they live in, how it affects their lives and what they do to stay warm or keep cool, as necessary. You can also upload your own stories about life in extreme temperatures in your country.</p>`
+  },
+  p2_5: {
+    title: "Part 2 • Đề 5: Department Stores (A–E)",
+    text: `<p><b>A. Stafford's:</b> This store is popular for its range of good quality sportswear at very reasonable prices, which is hard to find elsewhere. And on the ground floor, you'll find displays of their famous handmade candies — great for celebrations! And Stafford's is always the first to offer new designs in men's and women's clothing, too!</p>
+    <p><b>B. Davidson's:</b> This traditional-looking store opened in 1860, and still offers high-class, fashionable goods at reasonable prices, with many made from natural materials. The men's clothes are particularly recommended, and there's also an area selling nothing but beautiful jewellery. And on fine days, try the rooftop restaurant — the food is fantastic.</p>
+    <p><b>C. Barton's:</b> Barton's has been here since it opened in 1930, and still has its huge glass door and beautiful windows. The first floor is fantastic for children, as it's packed with things to play with — at reasonable prices. And downstairs, you'll find a huge selection of amazing fresh food rarely found elsewhere.</p>
+    <p><b>D. Ford and Made croft's:</b> The café here serves fantastic meals, but also has amazing chocolates and frozen desserts of all kind, and the bakers produce fantastic biscuits and cakes to take away. Upstairs, you'll find a display of toys and also a huge range of board games, together with instructions to help you play.</p>
+    <p><b>E. Hall wick's:</b> People often visit Hall wick's just for the displays of lights that make it so attractive to shop here. And it was the first to sell clothes made of pure, natural cotton, grown in conditions that avoid creating pollution. The assistants are polite and will help with any questions about goods.</p>`
+  },
+
+  // PART 3 PASSAGES
+  p3_1: {
+    title: "Part 3 • Đề 1: Amazing facts about teenager's brain",
+    text: `<p>The problem isn't teenagers — it's their brains. Teenagers sleep a lot. They need about 9–10 hours' sleep a night, while adults need 6–8 hours. But they are not staying in bed because they are lazy. It's because levels of the 'sleep' hormone, melatonin, increase later at night and decrease later in the morning.</p>
+    <p>Teenage boys have lots of little accidents. They are often clumsy because they are <b>growing so quickly</b> (sometimes 3 cm in 3 months). When the body grows quickly, the brain doesn't know how to control it yet.</p>
+    <p>Teenagers do dangerous things because their brains are changing. In a teenager's brain, there are <b>few connections</b> between different parts of the brain, so teenagers <b>don't plan</b> before they do something. Also, the 'pleasure centre' is very large — that's why music sounds so great at 15.</p>
+    <p>Teenagers have lots of emotions because the <b>limbic system</b> (which creates memories and emotions) grows when you're a teenager. Teenagers worry about friends' opinions because when <b>teenagers' brains grow</b>, they develop new skills to see themselves from others' viewpoints.</p>
+    <p>When you become an adult, you need less sleep, your body stops growing, the pleasure centre becomes smaller, and life becomes easier — and maybe a little more boring!</p>`
+  },
+  p3_2: {
+    title: "Part 3 • Đề 2: Computer games as tools for play",
+    text: `<p>Most children enjoy playing computer games. However, parents often worry that if their children play computer games they will interact <b>less</b> with friends. Many people see this as a greater problem with <b>boys</b> than with girls, because boys enjoy fast-paced action games and adults notice violent elements in many of them.</p>
+    <p>However, computer games are still games, like table tennis: very few people play simply to win — people play because it is a fun way to spend time together. Children sometimes play computer games on their own to pass the time when bored, but very few would rather play alone than spend time with friends.</p>
+    <p>Typically, children play in a group of <b>different ages</b>. Young children can play very complicated games designed for older children because being part of the group is important, while games for their own age group are seen as 'childish'.</p>
+    <p>Just like watching online videos, going to the cinema, or TV series, computer games are tools for social interaction and being together.</p>`
+  },
+  p3_3: {
+    title: "Part 3 • Đề 3: Charlie Chaplin's early life",
+    text: `<p>He was believed to have been born on April 16, 1889, though there is doubt whether he was born in 1889. His parents separated soon after his birth. His father died an alcoholic when Charlie was 12, and his mother died in 1928 in the United States, two years after coming to live with Chaplin — by then a commercial success.</p>
+    <p>Charlie first took to the stage aged five (1894) in Music Hall (UK). In 1903, his first regular job was acting as the newspaper boy Billy in <i>Sherlock Holmes</i>. Later he joined Fred Karno's slapstick comedy company (British).</p>
+    <p>According to immigration records, he arrived in the United States with the Karno troupe on <b>October 2, 1912</b>. He shared a room in a boarding house with Stan Laurel. Film producer Mack Sennett saw Chaplin's act in the US and hired him for the Keystone Film Company.</p>`
+  },
+  p3_4: {
+    title: "Part 3 • Đề 4: Galina Amato & Bruno Silva",
+    text: `<p><b>Galina Amato:</b> I'm Italian, but my mum's from <b>Russia</b>. I'm studying art and education. I've done volunteer work teaching children art, but I've never taught at a school before. I can't wait to learn more about how to teach, and I want to meet experienced teachers to learn from them. I play guitar in a band; sometimes we get paid, usually just for fun.</p>
+    <p><b>Bruno Silva:</b> From São Paulo, Brazil. I'm studying education — this is my <b>last year</b>. I live with my parents and my little sister (14). I'm always interested in learning new ways to do things. I've been teaching primary-school students (7–10 years old) for 5 years. I teach English to children after school, and help secondary-school students with homework at the weekend.</p>`
+  },
+  p3_5: {
+    title: "Part 3 • Đề 5: Emails (Lockwood & Jenny)",
+    text: `<p><b>Email 1 (to Mr. Lockwood):</b> Apology for the online course program losing your homework. I've found your work and attached it. We're offering you <b>50% off</b> your next course if you continue to study with us.</p>
+    <p><b>Email 2 (to Tarik):</b> I need to leave early today and can't go to the sales meeting this afternoon. My sister fell and broke her leg skiing at the weekend. I'm working from home for the rest of the week to look after her until she can walk again. I've already handed in the sales report, so you don't need to worry about that.</p>
+    <p><b>Email 3 (to Frida & Nick):</b> Carolina fell while skiing and broke her leg. She's staying with me for the rest of the week. Carolina wants me to pass on the message that she really is fine and not to worry.</p>`
+  },
+  p3_6: {
+    title: "Part 3 • Đề 6: Studying in the UK",
+    text: `<p>Over 485,000 foreign students study in the UK, with the largest number (over 120,000) from <b>China</b>. The most popular courses are <b>business studies and engineering</b>. A British Council report suggests that by 2024 an <b>additional 83,000</b> international students will come to the UK.</p>
+    <p><b>Li Jing (Hong Kong):</b> Always dreamed of coming to Britain; studying <b>medicine</b> at Edinburgh (a friendly city).</p>
+    <p><b>Mushtaq (Pakistan):</b> Been to the UK many times; has family in <b>Manchester</b>. Studying <b>law</b>; at the end of the year needs to hand in three long essays.</p>
+    <p><b>Andreas (Germany):</b> English is the only foreign language I speak. Culture and food are similar to Germany. Revising for final exams in <b>psychology</b>.</p>`
+  },
+  p3_7: {
+    title: "Part 3 • Đề 7: A day at Raskin Cattle Ranch",
+    text: `<p>I spent last summer holiday in California and went on a day trip to a working cattle ranch north of LA. Traffic was bad and it took ages, but our guide Maria kept us entertained with stories and jokes.</p>
+    <p>The Raskin Ranch has been a family business since <b>1895</b> (over 100 years). Workers wear jeans and cowboy hats because it's the most practical way to dress for their work — not as a tourist show.</p>
+    <p>Lunch had one thing on the menu: barbecue steak — the best steak I've ever eaten! It was incredible how much we crammed into a short visit. I hadn't had much to do with horses, but they were calm for beginners. Later I learnt to throw a lasso and build a campfire ("they don't teach you that in school!"). I don't know if I'll ever go to California again, but if I do I'll definitely visit.</p>`
+  },
+  p3_8: {
+    title: "Part 3 • Đề 8: The careful traveler",
+    text: `<p>Steve Potter travels as cheaply as possible. According to Steve, it's hard to see the real culture of a city from a hotel. In Havana, he stayed with a Cuban family, saw a bagpipe performance, and talked with performers who showed him how to play — showing how cheap travel offers a closer look at life.</p>
+    <p>In the Czech Republic with his parents (in their 60s), they stayed in a youth hostel where backpackers treated them just like everybody else. Steve says following a guidebook too closely makes you miss treats.</p>
+    <p>On his first major trip, savings meant for 3 months lasted 3 years across 3 continents. How to spend so little is "no secret". He sometimes dines for free when invited by generous locals. For Steve, being imaginative and making the most of any situation matters more than just living cheaply.</p>`
+  },
+  p3_9: {
+    title: "Part 3 • Đề 9: Ocean Research (Tessa)",
+    text: `<p>Tessa's biology teacher was delighted when she joined a sea-life project she had seen on a <b>biology website</b>. Her flight cost less than a week's holiday in a diving resort. Coral had reduced by 90% (global warming); divers collected data for international scientists studying rising temperatures.</p>
+    <p>Tessa lived in an <b>old camp</b>. The routine included housework — several people complained. Everyone had to pass a test identifying coral before diving without staff. They visited a nearby school where local children taught <i>them</i> about the island. On weekends they hired cars or took crowded local buses, with little time to relax on the beach. Food was very simple, yet for Tessa the whole experience was incredible.</p>`
+  },
+  p3_10: {
+    title: "Part 3 • Đề 10: A young English sailor",
+    text: `<p>Sally (17) sailed around Britain alone; one year later her 15-year-old cousin Mark did the same, so she's no longer the youngest. Her father has built and repaired boats all his life. Before Sally was old enough to go to school, the family took a 6-month Pacific cruise.</p>
+    <p>Sally saved her own money to buy an old yacht, and got financial assistance from a sports company in return for advertising their product on the side of the boat. In Aberdeen she stayed with her dad's old friend (a former keen sailor). She emailed her schoolwork to her dad to check.</p>
+    <p>Problems: a faulty fuel pump, 2-metre waves, and a complete lack of wind delayed her arrival in Aberdeen. Later, Sally did everything she could to encourage her cousin Mark to copy her.</p>`
+  },
+
+  // PART 4 PASSAGES
+  p4_1: {
+    title: "Part 4 • Test 1: Health: 1970s and TODAY",
+    text: `<p><b>Food & drink:</b> In the 1970s people didn't worry much about food and ate more red meat & white bread. Today white bread sales dropped 75%, people prefer wholemeal bread and eat less red meat, though they still love chips!</p>
+    <p><b>Healthcare:</b> Today people live longer thanks to drugs (statins) and MRI machines, giving doctors better understanding. One area that has become worse is <b>food allergies</b> (lack of Vitamin D).</p>
+    <p><b>Exercise:</b> In the 1970s there weren't many fitness centres; today over 10 million British people go to gyms regularly, yet daily lives are less active because more people drive cars instead of walking.</p>
+    <p><b>Technology:</b> Improved healthcare & offers online workouts/health apps, but also negative effects: sitting long periods causes neck, shoulders & back problems, and blue light causes lack of sleep and stress.</p>`
+  },
+  p4_2: {
+    title: "Part 4 • Test 2: Living to change (Kieran)",
+    text: `<p>About two years ago, I earned a good salary but spent it immediately on restaurants and new clothes. I worried a lot about money, so I decided to make a change.</p>
+    <p>First, I stopped buying new clothes and wore things already in my wardrobe. After that, I got a roommate (Tim). Then I started cooking at home — at first I was a terrible cook, but watching online videos made my food delicious and healthier, so I lost weight! When my clothes didn't fit, I bought used clothes online and sold my old ones. In the end, I spent my savings on a cookery course to study to be a chef.</p>`
+  },
+  p4_3: {
+    title: "Part 4 • Test 3: The book reviews",
+    text: `<p><b>Margarita:</b> Love + adventure story starting in Mexico City, taking place worldwide. Martha is funny/clever; Marco is boring. Adventure parts exciting, love story dull & unrealistic — book would be fine without the love story.</p>
+    <p><b>Tamika:</b> Written by my favourite author (though not my favourite of hers). Island chase was surprising! Martha is similar to author's other characters. Marco was amazing, sweet love story. I recommend it!</p>
+    <p><b>Oliver:</b> I like love stories, but this wasn't very exciting. Marco was boring and annoying — better without Marco.</p>
+    <p><b>Mae:</b> Couldn't put it down, great action. Romance was dull and complicated. Marco was unrealistic, doesn't say much, but when he does, he says wonderful things.</p>`
+  },
+  p4_4: {
+    title: "Part 4 • Test 4: Galina Amato & Bruno Silva",
+    text: `<p><b>Galina Amato:</b> Italian (mum from Russia), studying art and education in the US. Hopes to be an art teacher. Volunteered teaching children art, never taught at a school before. Misses her family.</p>
+    <p><b>Bruno Silva:</b> From São Paulo, Brazil. Last year studying education. Lives with parents (who work long hours) and 14-year-old sister (looks after her a lot). Five years teaching primary students (7–10). Wants a degree for a private school job. Helps secondary students with homework at weekends.</p>`
+  },
+  p4_5: {
+    title: "Part 4 • Test 5: We get great pleasure from reading",
+    text: `<p>The more advanced a man is, the greater delight he finds in reading. Ordinary people may think philosophers and scientists don't read for pleasure, but this is not true — mathematics is mental recreation just like an adventure story.</p>
+    <p>First in order of popularity is novel-reading, letting us escape into a new world very much like <b>our world</b> and yet different from <b>it</b>. Next in order of popularity are travel books, biographies and memoirs, which are true and give us knowledge and <b>immense</b> (great) pleasure.</p>`
+  },
+  p4_6: {
+    title: "Part 4 • Test 6: Successful students",
+    text: `<p>Successful students get an overview before reading, find key info, relate points, use <b>prior</b> (earlier) knowledge, monitor understanding, and use a variety of study skills flexibly.</p>
+    <p>Conversely, low-achieving students take a passive role and rely on others (teachers, parents) to monitor their studying. They use a restricted range of study skills. <b>They</b> (low-achieving students) cannot explain why good study strategies are important.</p>`
+  },
+  p4_7: {
+    title: "Part 4 • Test 7: Apollo 11 & Moon Samples",
+    text: `<p>Apollo 11 astronauts brought back rock and soil samples for scientists to study. Moon soil contains small bits of rock and spherical glass (about half); scientists found no trace of animal or plant life.</p>
+    <p>Astronauts gathered two types of rocks: <b>Basalt</b> (volcanic lava formed at high temperatures) and <b>Breccia</b> (formed by impact; "<b>It</b> consists of small pieces of rock compressed together"). Gases (hydrogen, helium) were carried by solar wind <b>emitted</b> (sent out) by the Sun.</p>`
+  },
+  p4_8: {
+    title: "Part 4 • Test 8: Marianne Moore",
+    text: `<p>Marianne Moore (1887–1972) wrote compressed poems on varied subjects: animals, laborers (workers), artists, and the craft of poetry. She quoted others extensively ("a cabinet of fossils" is her metaphor for her writing).</p>
+    <p>She grew up in Kirkwood, taught in Carlisle, worked as a librarian in NYC, edited <i>The Dial</i>, and lived quietly mostly in <b>Brooklyn, New York</b>. Her poetry has been read by <b>succeeding</b> (future) generations. She won the Pulitzer Prize in 1952. "To earn a living is needful, but <b>it</b> [earning a living] can be done in routine ways."</p>`
+  },
+  p4_9: {
+    title: "Part 4 • Test 9: We Bought a Zoo",
+    text: `<p>In 2005, after Benjamin Mee's father died, his mother lived alone in London. Benjamin wanted to sell her house and buy a zoo so the whole family could live together and take care of each other. His wife was <b>anxious</b> (worried) because she was very ill.</p>
+    <p>After a year of trying to buy the zoo, in October 2006 "they did <b>it</b>" (buying the zoo). A jaguar escaped, repairs cost £500,000, and his wife died. In July 2007 the zoo opened. He wrote <i>We Bought a Zoo</i> (2008), and a 2012 Hollywood film earned money that helped pay bills and keep the zoo open.</p>`
+  },
+  p4_10: {
+    title: "Part 4 • Test 10: Fathers these days",
+    text: `<p>In the past, fathers earned money and did not dress or feed children. Today's fathers want to be closer, playing with kids and preparing meals (more hands-on).</p>
+    <p>New fathers often find young babies hard — "<b>They</b> [new fathers] are not always sure what to do." <b>Getting involved early</b> (paternity leave) is essential. Fathers benefit children by talking about the outside world (work, money, sport, adventure), leading to better school results and fewer problems.</p>`
+  },
+
+  // PART 5 PASSAGES
+  p5_1: {
+    title: "Part 5 • Test 1: The 11-year-old artist",
+    text: `<p>Daniel Johnson is <b>(1) an</b> 11-year-old artist. Recently, one of his paintings was sold for £30,000. The painting shows a winter snow scene near his home in Scotland, <b>(2) where</b> the young artist has lived all his life. Daniel has been an artist <b>(3) since</b> he first started painting scenes of nature on a family holiday <b>(4) at</b> the age of 5. His abilities were quickly recognised by his parents and art experts agreed the boy had something <b>(5) special</b>.</p>
+    <p>A local artist gave Daniel lessons and he got a lot of <b>(6) attention</b> from the media. When his paintings go on <b>(7) sale</b>, they are bought for very large <b>(8) amounts</b> of money by people from the USA and South Africa. Daniel's parents know they need to <b>(9) make</b> sure that he has a normal <b>(10) childhood</b>.</p>`
+  },
+  p5_2: {
+    title: "Part 5 • Test 2: Michelle Obama",
+    text: `<p>Michelle La Vaughn Robinson was born <b>(1) in</b> 1964 in Chicago, USA. She has an older brother, Craig, and the family <b>(2) lived</b> in a one-bedroom apartment. They didn't <b>(3) use to</b> have a lot of money. <b>(4) However</b>, the children learned two things: the first was to do your best in school and the <b>(5) second</b> was that it's more important to work hard than to <b>(6) earn</b> a lot of money.</p>
+    <p>Michelle worked hard and got a <b>(7) place</b> at Princeton University. She worked in a Chicago company, <b>(8) where</b> she met Barack Obama. They <b>(9) got</b> married in 1992. She has become one of the most <b>(10) famous</b> women in the world.</p>`
+  },
+  p5_3: {
+    title: "Part 5 • Test 3: Hi Lee (Barbara)",
+    text: `<p>Hope you're well. I'm <b>(1) sorry</b> I haven't written for a few weeks, but I'm very busy <b>(2) revising</b> for my exams. If I pass them all, I'll <b>(3) get</b> a place at university! I <b>(4) fancy</b> painting and drawing, and can't <b>(5) imagine</b> doing anything else! My mother seems to think I should study something more <b>(6) useful</b>.</p>
+    <p>If my brother's lucky, he'll get an <b>(7) exciting</b> job abroad. Of course, I'll be <b>(8) pleased</b> for him. I'm sure that even <b>(9) if</b> you can't come to Edinburgh this year, you'll be <b>(10) able</b> to visit one day.</p>`
+  },
+  p5_4: {
+    title: "Part 5 • Test 4: Learning to swim",
+    text: `<p>About a year ago, I was walking near a river and I <b>(1) slipped</b> and fell in. I <b>(2) felt</b> lucky because a friend helped me. To <b>(3) begin</b> with, I hated getting <b>(4) into</b> the water at the swimming pool. After showering, I found it <b>(5) easier</b> to get into the water.</p>
+    <p>I started with very easy <b>(6) exercises</b> like putting my head underwater. I felt a <b>(7) bit</b> stupid. Learning <b>(8) how</b> to breathe out underwater was difficult. After a while, I made good <b>(9) progress</b>. And I'm a lot more <b>(10) careful</b> near the river now!</p>`
+  },
+  p5_5: {
+    title: "Part 5 • Test 5: Studio Ghibli",
+    text: `<p>Studio Ghibli is one of the most <b>(1) well-known</b> animation studios in the world. Between 1985 and 2014, it <b>(2) produce</b> [đề cương] over 20 animated films. Most of the films were <b>(3) directed</b> by Hayao Miyazaki and Isao Takahata. Ghibli is famous <b>(4) for</b> using traditional animation methods. Most <b>(5) modern</b> animation is done using computers.</p>
+    <p>At Ghibli, every frame is drawn <b>(6) by</b> hand. There are thousands of frames in a <b>(7) film</b>! First, a script is <b>(8) written</b>. Speaking parts are recorded as <b>(9) well</b> as music. Finally, all the pieces are put <b>(10) together</b> by the director.</p>`
+  },
+  p5_6: {
+    title: "Part 5 • Test 6: Hi Phil (Betty)",
+    text: `<p>Can you recommend a good restaurant <b>(1) for</b> my Mum's birthday next month? We'd regret it if we chose the <b>(2) same</b> restaurant as last year. There <b>(3) were</b> so many problems. First, there were not enough waiters <b>(4) so</b> we had to wait a long time. The food was too cold to <b>(5) eat</b>. If they used less salt, the food <b>(6) would</b> be much nicer.</p>
+    <p>The waiter forgot our <b>(7) drinks</b>. <b>(8) Honestly</b>, I never want to go back there again. You would make my Mum happy if we could find a <b>(9) good</b> Italian restaurant. Email me soon so I can <b>(10) book</b> a table!</p>`
+  },
+  p5_7: {
+    title: "Part 5 • Test 7: Coelacanths",
+    text: `<p>Coelacanths are fish <b>(1) which</b> lived in the sea a long time ago. Scientists <b>(2) used</b> to think they disappeared 65 million years ago. One day <b>(3) in</b> 1938, Marjorie, who <b>(4) worked</b> in a museum, received an <b>(5) unexpected</b> phone call from a fisherman. She took the strange fish <b>(6) back</b> to the museum.</p>
+    <p>She contacted James Smith, a science teacher <b>(7) at</b> a nearby university. It soon became the most <b>(8) famous</b> fish in the world! Scientists gave it the <b>(9) name</b> Latimeria chalumnae, and the place is now known <b>(10) as</b> Latimer's Landing.</p>`
+  },
+  p5_8: {
+    title: "Part 5 • Test 8: The whale Mila",
+    text: `<p>Some years ago, a Chinese zoo organized a special diving <b>(1) competition</b>. The water <b>(2) was</b> 7 metres deep and very cold. Yang Yun was a <b>(3) confident</b> diver, but hadn't ever dived in such cold, deep <b>(4) water</b> before. After a <b>(5) few</b> minutes, she couldn't move her legs. She felt very anxious and afraid <b>(6) at</b> that moment.</p>
+    <p>A whale called Mila wanted to <b>(7) help</b> her. When people saw Mila pushing Yun out, they <b>(8) understood</b> that the whale had saved her. Yun knew an incredible force was pushing her <b>(9) up</b>, and will never forget Mila — the whale that saved her <b>(10) life</b>.</p>`
+  },
+  p5_9: {
+    title: "Part 5 • Test 9: Star Trek",
+    text: `<p>Star Trek started <b>(1) as</b> a TV series in 1966. The series is set <b>(2) in</b> the 23rd century. The crew travel to <b>(3) different</b> planets. Together, they face <b>(4) danger</b> and have many strange adventures. In <b>(5) the</b> 1960s, there <b>(6) was</b> a machine called a 'replicator' which could <b>(7) make</b> food and small objects, and another <b>(8) called</b> a 'communicator', letting the crew talk to each other <b>(9) directly</b>. Since the 1960s, many Star Trek series and films have been <b>(10) made</b>.</p>`
+  },
+  p5_10: {
+    title: "Part 5 • Test 10: New Species of Lizard",
+    text: `<p>In 2010, Ngo Van Tri was <b>(1) at</b> a small village restaurant. He saw a box of lizards on a <b>(2) cooking</b> bench. He <b>(3) sent</b> some pictures to a <b>(4) biologist</b> in America, L. Lee Grismer. Grismer wanted to make the <b>(5) discovery</b>. <b>(6) However</b>, while he was travelling, the owner cooked the lizards and <b>(7) served</b> them to his customers.</p>
+    <p>When Grismer <b>(8) arrived</b>, they were all gone. Luckily, a nearby restaurant had the <b>(9) same</b> kind of lizard on their menu. The <b>(10) species</b> of lizard was new to scientists!</p>`
+  }
+};
+
+const QUESTIONS = [];
+
+function addPart1(testNum, items) {
+  items.forEach((it, idx) => {
+    QUESTIONS.push({ id: `p1_${testNum}_${idx+1}`, part: 1, test: testNum, num: idx + 1, tag: it[0], prompt: it[1], options: it[2], ans: it[3], tip: it[4] });
+  });
+}
+function addPart2(testNum, title, optionLabels, items) {
+  items.forEach((it, idx) => {
+    QUESTIONS.push({ id: `p2_${testNum}_${idx+1}`, part: 2, test: testNum, testTitle: title, num: idx + 1, passageKey: `p2_${testNum}`, prompt: it[0], options: optionLabels, ans: it[1], tip: it[2] });
+  });
+}
+function addPart3(testNum, title, items) {
+  items.forEach((it, idx) => {
+    QUESTIONS.push({ id: `p3_${testNum}_${idx+1}`, part: 3, test: testNum, testTitle: title, num: idx + 1, passageKey: `p3_${testNum}`, prompt: it[0], options: ["TRUE (Đúng)", "FALSE (Sai)"], ans: it[1] ? 0 : 1, tip: it[2] });
+  });
+}
+function addPart4(testNum, title, items) {
+  items.forEach((it, idx) => {
+    QUESTIONS.push({ id: `p4_${testNum}_${idx+1}`, part: 4, test: testNum, testTitle: title, num: idx + 1, passageKey: `p4_${testNum}`, prompt: it[0], options: it[1], ans: it[2], tip: it[3] });
+  });
+}
+function addPart5(testNum, title, items) {
+  items.forEach((it, idx) => {
+    QUESTIONS.push({ id: `p5_${testNum}_${idx+1}`, part: 5, test: testNum, testTitle: title, num: idx + 1, passageKey: `p5_${testNum}`, prompt: it[0], options: it[1], ans: it[2], tip: it[3] });
+  });
+}
+
+// ==================== PART 1 (6 Đề - 30 câu) ====================
+addPart1(1, [
+  ["Tin nhắn • Mum → Anton", "When you see your sister at the basketball match later, can you make sure she remembers that Dad's coming to fetch her instead of me? I've tried ringing, but her phone's off.", [
+    "Anton has to check his sister knows about the arrangements for getting home.",
+    "Anton should remind his sister to switch her phone back on.",
+    "Anton needs to ask his sister if she is taking part in a sports event later."
+  ], 0, "Dad's coming to fetch her = arrangements for getting home"],
+  ["Quảng cáo phim", "From the famous novel by Ben Whitham: a film about a bear's adventures. Fun for all the family!", [
+    "About a family of wild animals.",
+    "Not suitable for people under a certain age.",
+    "Based on a popular fiction book."
+  ], 2, "famous novel = popular fiction book"],
+  ["Email • Mrs Hoskins → Students", "Before the end of term, please return all books you have borrowed from the library, or see someone at the desk if you want to have them for the summer holiday.", [
+    "You must take back all the library books you have got before the summer holiday.",
+    "If there are library books you want, borrow them before the end of term.",
+    "To keep any library books for holiday reading, ask staff at the desk."
+  ], 2, "see someone at the desk = ask staff at the desk"],
+  ["Tin nhắn • Nicola → Tina", "When you come round tonight, can you bring that earring you found outside school the other day? I think I know who it belongs to, so I'll return it.", [
+    "Nicola is telling Tina to return something she was lent recently.",
+    "Nicola is hoping she can give a lost item back to its owner.",
+    "Nicola is asking for help to find a lost earring belonging to her."
+  ], 1, "know who it belongs to → give a lost item back to its owner"],
+  ["Biển báo • BIKES FOR HIRE", "Adult cycles always available. Children's cycles – book in advance. 8 a.m. – 9 p.m. Only €20 per day.", [
+    "Families may not find suitable bikes for everyone unless they've reserved them.",
+    "You can always find a range of bikes for hire here.",
+    "Bikes are available for customers' use in the evening."
+  ], 0, "Children's cycles book in advance = unless they've reserved them"]
+]);
+
+addPart1(2, [
+  ["Thông báo thời tiết", "HEAVY SNOW EXPECTED OVERNIGHT. TRAIN AND BUS DELAYS POSSIBLE. CHECK WEBSITES REGULARLY – SOME SCHOOLS AND OFFICES MAY BE CLOSED TOMORROW.", [
+    "The bad weather will make a lot of public transport late tomorrow.",
+    "Snow that is falling will cause a number of problems tomorrow.",
+    "Students should watch for announcements in case they are unable to attend classes tomorrow."
+  ], 2, "CHECK WEBSITES + schools may be closed = watch for announcements"],
+  ["Thông báo • Mrs Jones", "Have you got books you've already read? Bring them to our Book Exchange on Friday – other students might enjoy them!", [
+    "Share books they no longer want with their schoolmates.",
+    "Find out from other students which books they've enjoyed.",
+    "Bring in a good book to talk about on Friday."
+  ], 0, "already read + Book Exchange = share with schoolmates"],
+  ["Tin nhắn • Sophie → Billy", "Have you got Joanna's number? I'm supposed to meet her at the cinema in 10 minutes, but Dad's driving me into town and we're in a huge traffic jam!", [
+    "Sophie wants Billy to contact Joanna and warn her about traffic problems in town.",
+    "Sophie needs to let Joanna know that she's probably going to be late.",
+    "Sophie's not sure when she's supposed to meet Joanna to see a film."
+  ], 1, "xin số + traffic jam = báo Joanna sắp bị trễ (probably going to be late)"],
+  ["Email • Coach → Rugby club", "Just wanted to thank players in Saturday's match, and people who supported them. Remember, the other side were league winners, so all wasn't bad – but next time let's beat them!", [
+    "Congratulating the team on their most recent win.",
+    "Letting the team's fans know the positive effect of their support.",
+    "Encouraging the team to play even better in a future match."
+  ], 2, "next time let's beat them = play even better in a future match"],
+  ["Café Menu", "See below for our regular dishes – or for today's 'specials' go inside to see the board by the counter!", [
+    "We have more food available, apart from what's written on the menu.",
+    "To decide what to eat, you must go and look at the board inside.",
+    "Speak to someone at the counter when you want to order your food."
+  ], 0, "today's specials on board = more food apart from menu"]
+]);
+
+addPart1(3, [
+  ["Quảng cáo • Toni's Pizza Bar", "Want to enjoy a pizza with your friends? This week only – special offers on our giant pizzas.", [
+    "Choose which size of pizza you buy and still get a special price.",
+    "Pay less at the moment for pizzas big enough to share with other people.",
+    "The very big pizzas at Toni's are only available this week."
+  ], 1, "special offers + giant + friends = pay less + big enough to share"],
+  ["Email • Mrs Walsh → Students", "Lots of you have got in touch with me, with good ideas for increasing recycling around the school. I'll announce which ones we've chosen in the hall this afternoon.", [
+    "Mrs. Walsh wants students to contact her with plans for recycling around the school.",
+    "Mrs. Walsh intends to let students know which of their suggestions the school will use.",
+    "Mrs. Walsh wants students to go to the hall today to help recycle rubbish."
+  ], 1, "announce which ones we've chosen = let know which suggestions will use"],
+  ["Tin nhắn • Sarah → Tim", "I'm going to a tree-planting day tomorrow, to help the environment by increasing the number of trees. If you're interested, come along – and bring some friends, if they'd also like to help!", [
+    "Sarah is keen to get others involved in an environmental project she's joining.",
+    "Sarah says a tree-planting project is still short of volunteers to complete their work.",
+    "Sarah is wondering whether to take part in a project with her friend."
+  ], 0, "come along + bring some friends = get others involved"],
+  ["Biển báo • BROWN'S BOOKS", "Everything must go! Moving to a new location in town. All goods, including books, half-price this week.", [
+    "This bookstore will no longer serve customers in the town after this week.",
+    "Only books are available here this week, at a reduced price.",
+    "To buy books from Brown's, find their new store in town after this week."
+  ], 2, "Moving to a new location = find their new store after this week"],
+  ["Tin nhắn • Carrie → Mum", "Are you at work? I thought I'd put my gym kit in my room – and it's not in the washing machine either. Could it still be in your car? Call me!", [
+    "Carrie is asking if her mum has washed her gym kit for her.",
+    "Carrie has just remembered where she left her gym kit.",
+    "Carrie wonders if her mum has driven to work with her gym kit."
+  ], 2, "at work + still in your car = driven to work with her gym kit"]
+]);
+
+addPart1(4, [
+  ["Tin nhắn • Lena → Marta", "I won't be ready in time to catch the bus into town with you, so I'll get a lift there with Mum instead. See you at the shopping centre at about 3 p.m.", [
+    "Suggesting that Marta travels into town without her.",
+    "Offering Marta a lift into town instead of catching the bus.",
+    "Checking the time she arranged to meet Marta at the shopping centre."
+  ], 0, "won't be ready to catch bus with you = travels without her"],
+  ["Email • Coach → Hockey team", "You played well in last week's game, but we'll need extra practice before our match against Anbridge next month – they're good. So see you on Saturday, usual place, 1 p.m. – or call me.", [
+    "The coach needs team members to tell him if they're available for a match.",
+    "The coach wants to help the team improve their performance before they play again.",
+    "The coach is congratulating the netball team for winning their game last week."
+  ], 1, "extra practice before match = improve their performance"],
+  ["Thông báo • Study Centre", "Please give staff at the desk your college student number before using any of the computers in the Study Centre.", [
+    "Staff at the desk will show you how to use the computers here.",
+    "These computers are reserved only for students at this college.",
+    "If you're not a college student, ask staff for permission to use a computer."
+  ], 1, "college student number = reserved only for students at this college"],
+  ["Tin nhắn • Mum → Tom", "The sports shop called – the one on Hatton Street. They've finally repaired your tennis racket! Will you have time to collect it, or shall I do it on my way home from work?", [
+    "How to find the sports shop that's repaired Tom's racket.",
+    "Whether the sports shop will still be open when she finishes work.",
+    "If Tom is going to be available to pick up his racket."
+  ], 2, "Will you have time to collect = available to pick up"],
+  ["Quảng cáo • Milton Music Store", "Second-hand guitars and violins for sale. Very reasonable prices. New instruments also available. Call: 08413 672 521.", [
+    "This store has more second-hand instruments available than new ones.",
+    "You can only buy instruments here that other people have already used.",
+    "This store doesn't charge a lot for instruments that aren't new."
+  ], 2, "Second-hand + reasonable prices = doesn't charge a lot for not new"]
+]);
+
+addPart1(5, [
+  ["Email • Mrs Evans → Students", "Could everyone involved in the school performance for parents tomorrow please meet in the hall at 4 p.m. today for the final practice?", [
+    "Mrs. Evans wants to check who is taking part in the performance this afternoon.",
+    "Mrs. Evans wants everyone to practice their performance again before the audience sees it.",
+    "Mrs. Evans is letting students know that parents are coming to the practice tomorrow."
+  ], 1, "final practice today before parents tomorrow = practice again before audience"],
+  ["Biển báo hồ", "PLEASE DON'T FEED BREAD TO THE DUCKS! AVAILABLE FOR SALE INSIDE LAKE SHOP: SPECIAL FOOD PERMITTED FOR BIRDS.", [
+    "If you need bread during your visit, it's available for sale inside the shop.",
+    "Feeding the birds on the lake is not allowed unless you have special permission.",
+    "Visitors are encouraged not to give the birds anything apart from proper bird food."
+  ], 2, "don't feed bread + special food permitted = apart from proper bird food"],
+  ["Tin nhắn • Mum → Tim", "Your swimming coach rang – he wants to know if you're swimming tomorrow after your injury. I wasn't sure if you felt your leg was fully recovered, so can you let him know?", [
+    "Tim must decide whether he's well enough to swim after his injury.",
+    "Tim's mum doesn't think Tim is fit and ready to go swimming yet.",
+    "Tim needs to inform his swimming coach that he's injured his leg."
+  ], 0, "leg fully recovered? let him know = decide whether well enough"],
+  ["Tin nhắn • Jade → Lucy", "I discovered when I got home that one of my new earrings was missing from my ear. Can you remember which shop we got them from? I'll get another pair – they weren't expensive.", [
+    "Tell Jade if she knows where a missing item is.",
+    "Accompany Jade on a shopping trip into town.",
+    "Help Jade to replace something she's lost."
+  ], 2, "get another pair = replace something she's lost"],
+  ["Thông báo • Art Room", "Art Room closed – heating problems. See Mr James in Room B16 to check where your art lessons will be.", [
+    "Art classes will be in Room B16 as the Art Room is too cold.",
+    "To find out which room to go to for art lessons, ask Mr. James.",
+    "Mr. James is taking all art lessons until problems in the Art Room are fixed."
+  ], 1, "See Mr James to check where = ask Mr. James"]
+]);
+
+addPart1(6, [
+  ["Tin nhắn • Katie → Erica", "I've just read that novel you lent me – really enjoyed it, so I'm feeling sad I've finally finished it! Just wondering if you've got ideas for anything else I might like as much.", [
+    "Katie is upset that Erica hasn't returned the book she's borrowed.",
+    "Katie disagrees with Erica about a book they've both just read.",
+    "Katie wants some suggestions about what she could read next."
+  ], 2, "ideas for anything else = suggestions about what to read next"],
+  ["Biển báo lối vào", "PLEASE DO NOT LEAVE BICYCLES HERE! ENTRANCE IN USE NIGHT AND DAY. CYCLE PARK BEHIND BUILDING.", [
+    "This entrance is only for use by cyclists who need to enter the building.",
+    "You will prevent people entering and leaving if your bicycle is left here.",
+    "There is somewhere you can leave your bicycle opposite this building."
+  ], 1, "ENTRANCE IN USE = prevent people entering and leaving"],
+  ["Email • Mr Davidson → Students", "Thanks for attending the film show yesterday, and the director's interesting talk. The questions you asked him, and the lively discussion in class afterwards, showed you'd really thought about the film.", [
+    "To give his opinion of the film they watched together.",
+    "To suggest that they should spend another lesson talking about the film.",
+    "To congratulate them on the way they took part in a film event."
+  ], 2, "Thanks + lively discussion = congratulate on how they took part"],
+  ["Thông báo • SAILING CLUB", "UNDER-16s SAILING CLUB. Now taking new members. Limited spaces available. Club meets every Saturday – come along! Fees: weekly or monthly.", [
+    "Young people have the chance to learn some new watersports at this club.",
+    "You don't need to pay for several sessions in advance at this club.",
+    "To become a member at this club, apply by Saturday at the latest."
+  ], 1, "Fees: weekly or monthly = không cần trả trước nhiều buổi"],
+  ["Tin tức • Latest news!", "Despite previous difficulties between members, pop band Melt has just announced a concert tour later in the year. Tickets on sale from ticket agents soon! Watch this website for details.", [
+    "To attend a Melt tour concert, check the site regularly to find out more.",
+    "You'll soon be able to buy tickets for Melt's concerts on this website.",
+    "Melt has just started touring again even though they've had problems in the band."
+  ], 0, "Watch this website for details = check the site regularly"]
+]);
+
+// ==================== PART 2 (5 Đề - 25 câu) ====================
+addPart2(1, "Beaches", ["Silver Sands", "Minton Strand", "Holly Bay", "South Beach", "Bar Mouth Beach"], [
+  ["1. Neil and his family want a beach that's close to a car park and offers several other activities apart from spending time in the sea. They'd also like a picnic area near the beach.", 3, "Neil (car park + picnic) → D. South Beach (leave car + tables & chairs)"],
+  ["2. Jack and Henry can swim well, so they'd like opportunities for distance swimming with their dad. Their mum wants to go riding on the beach, and also buy snacks for everyone there.", 2, "Jack & Henry (distance swim + riding) → C. Holly Bay (2km + horses)"],
+  ["3. Salma and Katia want to go somewhere they can try watersports for the first time. Their mum wants a beach with warm water, and organized activities suitable for their small sister.", 0, "Salma & Katia (warm water + first time) → A. Silver Sands (temp higher + beginners)"],
+  ["4. Anna and her family would like to do some sunbathing, but also have a long walk along the coast. Anna also wants to try doing some sand sculptures.", 4, "Anna (sunbathing + sand sculptures) → E. Bar Mouth Beach (lying in sun + sand animals)"],
+  ["5. Sylvie's family wants a beach suitable for Sylvie's small sister to go swimming, as she's only just learned. Sylvie wants somewhere with various organised games and activities, where she can meet other people her age.", 1, "Sylvie (meet people her age) → B. Minton Strand (teenagers' beach club)"]
+]);
+
+addPart2(2, "Film Studios", ["Grand Studios", "West Ways", "Waverley Studios", "Movie World", "Film Park"], [
+  ["1. Tom wants to look around the studio at his own speed, and visit the actual sets where films were made. His mum wants to see online what the studio is like before she buys tickets.", 2, "Tom (own speed + see online) → C. Waverley Studios (not in groups + check website)"],
+  ["2. Ingrid is interested in seeing costumes that famous actors have worn, and she'd also like to ride on a vehicle that originally appeared in a film. Ingrid's mum wants a souvenir to remember their trip.", 4, "Ingrid (ride vehicle + costumes) → E. Film Park (old cars trip + original clothes)"],
+  ["3. Roberto wants to visit a studio where famous films were made many years ago, and buy something that appeared in one of the films. His dad wants to book online before they go.", 1, "Roberto (many years ago + buy item) → B. West Ways (40s movies + items on sale)"],
+  ["4. Simone likes science fiction films, and prefers looking at digital displays about how special effects are achieved to reading information. Simone's dad wants to get a digital guide.", 3, "Simone (digital guide) → D. Movie World (useful digital guide)"],
+  ["5. Ben is interested in how scenes from famous cities are created in studios. He'd also like to visit film locations outside the studios, accompanied by a guide who can answer his questions.", 0, "Ben (famous cities + outside guide) → A. Grand Studios (NY/Rome + bus ride with staff)"]
+]);
+
+addPart2(3, "Animated Films", ["Terry", "Constanz", "Magic Makers", "Imagining", "Roundabout"], [
+  ["1. Kerim wants a film that uses traditional animation methods, such as simple drawings rather than computers to create pictures. He particularly enjoys films about animals, and with great songs sung by well-known singers.", 0, "Kerim (traditional + animals + singers) → A. Terry (70s + tiger + top performers)"],
+  ["2. Alice, her mum and small sister want a film they can all enjoy. Alice loves films where she feels the main characters are like her, and that have soundtracks involving only instruments, with no singing.", 3, "Alice (whole family + instruments only) → D. Imagining (family + piano & violin)"],
+  ["3. Lukas enjoys films that make him laugh, but that he can learn something from at the same time. He's a keen reader, and he'd like a film of something he's probably already read.", 1, "Lukas (laugh + book he read) → B. Constanz (comedy + well-known novel)"],
+  ["4. Minnie wants to see a happy film that isn't just about heroes against bad people. She'd like a film that's full of surprises, that she'll want to watch over and over again.", 2, "Minnie (surprises + watch over and over) → C. Magic Makers (never get tired of watching)"],
+  ["5. Susana wants to see a film about characters that show courage in different situations, and that have the voices of famous actors. She'd like the film to have really beautiful animation.", 4, "Susana (courage + famous actors) → E. Roundabout (brave friends + well-known performers)"]
+]);
+
+addPart2(4, "Geography Websites", ["Geographical", "Planet Zoom", "Geo watch", "Worldwide", "Go world"], [
+  ["1. Sandra wants to learn more about what Planet Earth is actually made of, and how much of it is covered by water. She'd also like online advice about how to organize her work.", 2, "Sandra (made of + water + organize) → C. Geo watch (inside planet + oceans + presenting)"],
+  ["2. Miranda wants to learn about some of the famous tourist sites in the world, and why they have become famous. She'd like to play games on the website to help her remember the information.", 0, "Miranda (tourist sites + games) → A. Geographical (popular places + quizzes)"],
+  ["3. For his project, Billy needs to find out about the biggest mountains in the world, and the kind of animals living near them. He'd also like to see videos of the locations he's studying.", 3, "Billy (biggest mountains + videos) → D. Worldwide (highest peaks + film clips)"],
+  ["4. Anna wants to learn about the biggest land areas of the world, and get key facts about their geography. She'd also like advice on how to improve her map-reading skills.", 1, "Anna (land areas + map-reading) → B. Planet Zoom (continents + guide to maps)"],
+  ["5. Kristofer's country has very cold winters, so he's interested in how other people in cold countries deal with their environment. He'd like to share his experiences online with teenagers there.", 4, "Kristofer (cold winters + share online) → E. Go world (extreme temp + upload stories)"]
+]);
+
+addPart2(5, "Department Stores", ["Stafford's", "Davidson's", "Barton's", "Ford and Made croft's", "Hall wick's"], [
+  ["1. Jasmine would like to find a store where they can eat outside, and her dad wants somewhere known for its good-quality suits. They also want to buy a necklace for Jasmine's mum.", 1, "Jasmine (eat outside + suits + necklace) → B. Davidson's (rooftop + men's + jewellery)"],
+  ["2. Peter wants to buy some special sweets for his grandma's birthday, and his older sister, Nell, wants to see the latest women's fashions. They also need to buy new tennis T-shirts, without spending a lot.", 0, "Peter (sweets + cheap sportswear) → A. Stafford's (handmade candies + reasonable sportswear)"],
+  ["3. Maria wants a store selling clothes that use materials produced without damaging the environment. Her mum would like somewhere that has great customer service and is beautiful inside.", 4, "Maria (eco-friendly + service + beautiful) → E. Hall wick's (no pollution + polite + lights)"],
+  ["4. John enjoys cooking, and wants to buy some unusual ingredients. His parents like stores that have been in the same buildings since they were young, and that have great toys for John's young sister.", 2, "John (unusual ingredients + old building + toys) → C. Barton's (fresh food + 1930 + toys)"],
+  ["5. Samuel and Mark want to visit a store with a good selection of chess sets. They'd like to have some delicious ice creams and buy something made in the store to eat later.", 3, "Samuel & Mark (chess + ice cream) → D. Ford & Made croft's (board games + frozen desserts)"]
+]);
+
+// ==================== PART 3 (10 Đề - 100 câu T/F) ====================
+addPart3(1, "Teenager's brain", [
+  ["1. Teenagers sleep a lot because they are lazy.", false, "F — Do hormone melatonin, KHÔNG phải lười (not lazy)"],
+  ["2. Teenagers have lots of accidents because their brains are growing.", false, "F — Do CƠ THỂ lớn nhanh (body grows quickly), không phải não"],
+  ["3. Teenagers do dangerous things because they can't plan.", true, "T — teenagers don't plan before they do something"],
+  ["4. Teenagers have lots of emotions because they have more memories.", false, "F — Do hệ limbic phát triển, không phải vì nhiều ký ức"],
+  ["5. The brain's pleasure centre makes teenagers enjoy music more than other age groups.", true, "T — pleasure centre very large → music sounds so great at 15"],
+  ["6. Teenagers worry about their friends' opinions because their friends have new skills.", false, "F — Chính bản thân teenagers có kỹ năng mới, không phải bạn họ"],
+  ["7. Teenagers' brains change when they become adults.", true, "T — pleasure centre smaller, front part closely connected"],
+  ["8. Adults need to sleep as much as teenagers.", false, "F — Adults 6–8h < Teenagers 9–10h"],
+  ["9. There are some connections between different parts of the brain in a teenager's brain.", true, "T — there are few connections (vẫn có một số kết nối)"],
+  ["10. When you're an adult, life always becomes easier.", false, "F — Bẫy từ 'always' (bài không nói luôn luôn)"]
+]);
+
+addPart3(2, "Computer games", [
+  ["1. Most children are into playing computer games.", true, "T — Most children enjoy playing computer games"],
+  ["2. Parents often worry that if their children play computer games they will interact with their friends.", false, "F — Bài nói interact LESS (ít tương tác hơn)"],
+  ["3. Many people see playing games as a greater problem with girls than with boys.", false, "F — Ngược: greater problem with BOYS than girls"],
+  ["4. Children sometimes play computer games to pass the time when they are bored.", true, "T — use media to pass the time when they are bored"],
+  ["5. Some parents don't like boys' computer games because they're often violent.", true, "T — many adults notice the violent elements"],
+  ["6. Most people play table tennis to have a good time together.", true, "T — fun way to spend time together"],
+  ["7. Children of different ages rarely play computer games together.", false, "F — Ngược: thường chơi theo nhóm nhiều độ tuổi"],
+  ["8. Most children prefer to play computer games alone.", false, "F — Rất ít trẻ thích chơi một mình hơn chơi cùng bạn"],
+  ["9. Younger children usually find complicated computer games interesting and fun.", true, "T — Chơi game phức tạp để hòa nhập nhóm, chê game đúng tuổi là trẻ con"],
+  ["10. Computer games are like other kinds of media because they give children opportunities for being together.", true, "T — tools for games and social interaction"]
+]);
+
+addPart3(3, "Charlie Chaplin", [
+  ["1. Chaplin might have been born some years earlier than is currently believed.", true, "T — doubt whether April 16 / possible not born in 1889"],
+  ["2. His parents got divorced soon after his birth.", true, "T — parents separated soon after his birth"],
+  ["3. Chaplin first performed on the stage after he arrived in the United States.", false, "F — Diễn năm 5 tuổi (1894) ở Anh, trước khi sang Mỹ (1912)"],
+  ["4. His first serious job was delivering newspapers.", false, "F — Đóng vai cậu bé bán báo Billy, không phải đi giao báo thật"],
+  ["5. His first partner the actor, Stan Laurel shared a room with him in a boarding house.", true, "T — Chaplin and Laurel shared a room in a boarding house"],
+  ["6. He was discovered while working for a British organisation in the United States.", true, "T — Karno troupe (Anh) sang Mỹ → Mack Sennett phát hiện"],
+  ["7. Charlie first took to the stage at the age of five.", true, "T — first took to the stage when, aged five"],
+  ["8. His father died an alcoholic when Charlie was 12 years old.", true, "T — father died an alcoholic when Charlie was 12"],
+  ["9. Chaplin's mother died before her son was successful.", false, "F — Mất năm 1928 khi Chaplin ĐÃ thành công thương mại"],
+  ["10. Charlie went to the United States with the Karno troupe on October 20th 1912.", false, "F — Bẫy ngày: October 2 (không phải 20th)"]
+]);
+
+addPart3(4, "Galina & Bruno", [
+  ["1. The mother of Galina is Italian.", false, "F — Mẹ Galina là người Nga (Russia)"],
+  ["2. Amato has never before instructed youngsters in art at a school.", false, "F — Học thuộc theo đáp án đề cương: 2F"],
+  ["3. Galina is interested in learning about how to instruct kids.", true, "T — can't wait to learn more about how to teach"],
+  ["4. A lot of experienced educators are eager to meet Galina and learn from her.", false, "F — Ngược: Galina muốn gặp họ để học hỏi"],
+  ["5. Galina performs in a band only for fun.", true, "T — Học thuộc theo đáp án đề cương: 5T (usually just for fun)"],
+  ["6. This year, Bruno began studying education.", false, "F — This is my LAST year (năm cuối, không phải mới bắt đầu)"],
+  ["7. Bruno is the family's eldest kid.", true, "T — Có em gái 14 tuổi (little sister) → Bruno là con cả"],
+  ["8. Finding new things is Bruno's greatest passion.", true, "T — always interested in learning new ways to do things"],
+  ["9. The majority of his students are under the age of ten.", true, "T — Most students are between seven and ten years old"],
+  ["10. Bruno assists in teaching English to secondary students after school.", false, "F — Dạy tiếng Anh cho trẻ nhỏ, còn học sinh cấp 2 chỉ giúp làm bài tập cuối tuần"]
+]);
+
+addPart3(5, "Emails (Lockwood & Jenny)", [
+  ["1. The online course Mr. Lockwood was taking had an issue.", true, "T — problem you had with your online course"],
+  ["2. The Office of Student Affairs was unable to fully restore Mr. Lockwood's work.", false, "F — I've found your work, and it's attached to this email"],
+  ["3. Mr. Lockwood will receive a tuition offer of 50% off if he decides to continue his education.", true, "T — offering you 50% off your next course"],
+  ["4. Jenny is unable to make it to this afternoon's sales meeting.", true, "T — can't go to the meeting with the sales team this afternoon"],
+  ["5. Due to Jenny's damaged leg, Jenny's sister must take care of her.", false, "F — Ngược: Em gái bị gãy chân, Jenny phải chăm em"],
+  ["6. Tarik concerned about the sales reports Jenny has been working on.", false, "F — Jenny đã nộp rồi (already handed in), Tarik không cần lo"],
+  ["7. Frida, Nick, and Carolina all had ski-related injuries over the weekend.", false, "F — Chỉ có mình Carolina bị ngã khi trượt tuyết"],
+  ["8. For the rest of the week, Jenny can stay at home with Carolina.", true, "T — working from home for the rest of the week so she can stay with me"],
+  ["9. As soon as Carolina can walk again, she'll be back.", true, "T — look after her until she can walk again"],
+  ["10. Carolina is actually fine and everyone shouldn't be concerned about her.", false, "F — Học thuộc theo đáp án đề cương: 10F"]
+]);
+
+addPart3(6, "Studying in the UK", [
+  ["1. Chinese students made up the largest number of international students in the UK.", true, "T — largest number, over 120,000, coming from China"],
+  ["2. In the UK, there are three popular courses: psychology, business and engineering.", false, "F — Chỉ có 2 ngành phổ biến nhất: business studies và engineering"],
+  ["3. A recent study predicted that by 2024, there will be 80,000 fewer overseas students.", false, "F — Ngược: TĂNG thêm 83,000 (additional 83,000), không phải giảm"],
+  ["4. The three students' majors are literature, medicine, and psychology.", false, "F — 3 ngành là medicine, LAW (luật), và psychology"],
+  ["5. Li Qing made the decision to pursue his long-held desire of studying in Britain.", true, "T — always dreamed about coming here"],
+  ["6. The city of Edinburgh is welcoming.", true, "T — Edinburgh is a friendly city"],
+  ["7. Mushtaq has traveled to the UK frequently and his family is based in Pakistan.", false, "F — Gia đình anh ấy ở Manchester (Anh), không phải Pakistan"],
+  ["8. Mushtaq has already finished three lengthy essays.", false, "F — Cuối năm mới cần nộp (need to hand in), chưa xong"],
+  ["9. Andreas is an English-only speaker.", true, "T — Học thuộc theo đề cương: 9T (only foreign language)"],
+  ["10. German food is comparable to English food.", true, "T — the culture and the food are similar"]
+]);
+
+addPart3(7, "Raskin Cattle Ranch", [
+  ["1. The reason Tim went to the cattle ranch was to find work.", false, "F — Đi du lịch trong ngày (go on a day trip), không phải xin việc"],
+  ["2. Tim was bored on the long journey to the ranch.", false, "F — Không chán vì hướng dẫn viên Maria kể chuyện và đùa rất vui"],
+  ["3. The Raskin Cattle Ranch has been owned by the same family for over 100 years.", true, "T — family business since 1895 (>100 năm)"],
+  ["4. The workers on the ranch wear special clothes to entertain visitors.", false, "F — Mặc quần jeans/mũ cao bồi vì tiện cho công việc, không phải diễn"],
+  ["5. Everyone on the trip ate the same food for lunch.", true, "T — there was one thing on the menu: steak"],
+  ["6. Tim was rather disappointed with the food he was given.", false, "F — Ngược: Bít tết ngon nhất từng ăn (các lần sau mới thấy hơi thất vọng)"],
+  ["7. Tim did more than he had expected to do on the ranch.", true, "T — incredible how much we crammed into a short visit"],
+  ["8. Tim enjoyed the tour of the ranch because he was an experienced horse rider.", false, "F — Chưa có kinh nghiệm cưỡi ngựa (haven't had much to do with horses)"],
+  ["9. Tim found his day on the ranch to be very educational.", true, "T — Học ném dây thòng lọng và đốt lửa trại (trường học không dạy)"],
+  ["10. Tim is certain that he will return to Raskin Cattle Ranch one day.", false, "F — Không chắc có quay lại California không (I don't know if I will ever...)"]
+]);
+
+addPart3(8, "The careful traveler", [
+  ["1. Steve says hotels in the city centre are suitable places to start learning about a city.", false, "F — Ngược: khó thấy văn hóa thật từ khách sạn (hard to see real culture)"],
+  ["2. Steve asked his Cuban friends if he could perform at a local concert.", false, "F — Xem biểu diễn rồi nghệ sĩ chỉ cho cách thổi kèn, không phải xin diễn"],
+  ["3. Steve thinks that being careful with money actually means you learn more while you are travelling.", true, "T — cheap travel can offer a closer look at life"],
+  ["4. Steve's parents were shown great respect because of their age by other travelers they met.", false, "F — Đối xử bình đẳng như mọi người khác (just like everybody else)"],
+  ["5. In the Czech Republic, they avoided the typical sightseeing areas popular with tourists.", true, "T — Học thuộc theo đáp án đề cương: 5T"],
+  ["6. Steve advises travelers to get a good guidebook to learn about the places they visit.", false, "F — Theo sát guidebook sẽ bỏ lỡ nhiều điều hay"],
+  ["7. On his first big trip, Steve was able to use his money to travel much further than expected.", true, "T — Tiền dự tính đi 3 tháng kéo dài thành 3 năm qua 3 châu lục"],
+  ["8. Steve thinks it is obvious how to find ways to save money while travelling.", true, "T — How to spend so little is no secret"],
+  ["9. Steve likes to buy meals for kind local people who have helped him.", false, "F — Ngược: được người dân mời ăn miễn phí (dines for free)"],
+  ["10. For Steve, using his time well is even more important than saving money.", true, "T — making the most of any situation rather than just living cheaply"]
+]);
+
+addPart3(9, "Ocean Research", [
+  ["1. Tessa found out about the ocean wildlife project from her biology teacher at school.", false, "F — Tự tìm thấy trên trang web sinh học (seen on biology website)"],
+  ["2. Tessa's trip cost considerably more than a holiday in a diving resort.", false, "F — Ngược: vẫn rẻ hơn kỳ nghỉ 1 tuần ở resort lặn (wasn't as much as)"],
+  ["3. Tessa had to collect information that would help researchers studying climate change.", true, "T — thu thập dữ liệu san hô giúp nghiên cứu hiện tượng nóng lên toàn cầu"],
+  ["4. The place where Tessa stayed was specially built for people working on the project.", false, "F — Là một khu trại cũ (an old camp), không phải mới xây riêng"],
+  ["5. Some group members were unhappy about certain activities that they were asked to do.", true, "T — Phàn nàn vì phải làm việc nhà (complaining about housework)"],
+  ["6. Group members were tested on their knowledge before they could collect information for the scientists.", true, "T — Phải thi nhận diện san hô trước khi được tự lặn"],
+  ["7. Tessa's group were pleased to spend some of their time teaching local schoolchildren.", false, "F — Ngược: trẻ em địa phương dạy lại nhóm Tessa về hòn đảo"],
+  ["8. Tessa's group visited other parts of the island by car and bus.", true, "T — occasionally hired cars... caught crowded local buses"],
+  ["9. Tessa took advantage of the many opportunities to relax on the beach at weekends.", false, "F — Cuối tuần rất ít thời gian (little time to do more)"],
+  ["10. Tessa found it difficult to deal with the limited range of food available at the camp.", false, "F — Đồ ăn đơn giản nhưng Tessa vẫn thấy trải nghiệm thật tuyệt vời"]
+]);
+
+addPart3(10, "A young English sailor", [
+  ["1. Sally is the youngest person in her family to sail around Britain alone.", false, "F — Em họ Mark (15 tuổi) đã phá kỷ lục trẻ nhất sau đó 1 năm"],
+  ["2. Sally's father was interested in boat before Sally was born.", true, "T — father has built and repaired boats all his life"],
+  ["3. Sally started school later than most children.", false, "F — Đi biển 6 tháng NGAY TRƯỚC tuổi đi học, không nhập học muộn"],
+  ["4. Sally paid for her own boat with financial help from her parents.", false, "F — Tự tiết kiệm tiền mua + công ty thể thao tài trợ, bố chỉ giúp sửa"],
+  ["5. Before beginning her trip, Sally made money by appearing in advertisements for a sports company.", false, "F — Quảng cáo bằng cách dán logo lên mạn thuyền, không phải đóng quảng cáo"],
+  ["6. Sally's father's friend had some personal experience of Sally's sport.", true, "T — Từng là thủy thủ nhiệt huyết (a keen sailor in his younger days)"],
+  ["7. Sally's father emailed work she had completed to her school for checking.", false, "F — Sally gửi email cho bố để chính bố kiểm tra bài cho cô"],
+  ["8. Apart from the problem with the fuel pump, everything on Sally's boat worked well.", true, "T — Học thuộc theo đáp án đề cương: 8T"],
+  ["9. Sally's arrival in Aberdeen was delayed because of the weather conditions.", true, "T — Thiếu gió (complete lack of wind) khiến cô cập bến Aberdeen trễ"],
+  ["10. Sally was annoyed that her cousin wanted to do the same thing as her.", false, "F — Ngược: Sally hết lòng động viên em họ Mark (encourage him)"]
+]);
+
+// ==================== PART 4 (10 Tests - 50 câu) ====================
+addPart4(1, "Health: 1970s and TODAY", [
+  ["1. Which of the following statements is FALSE?", [
+    "In the 1970s, people didn't worry so much about the food they ate.",
+    "In the 1970s, people didn't live as long as they do today.",
+    "In the 1970s, people spent more time at the gym.",
+    "In the 1970s, people didn't spend time in front of computers."
+  ], 2, "Thập niên 70 mới bắt đầu tập, ngày nay mới đi gym nhiều hơn → C sai"],
+  ["2. What is a change in eating habits in the UK?", [
+    "They don't eat chips as much as in the 1970s.",
+    "They don't eat wholemeal bread as much as in the 1970s.",
+    "They don't eat red meat as much as in the 1970s.",
+    "In general, they eat unhealthy food as much as in the 1970s."
+  ], 2, "Ngày xưa ăn nhiều thịt đỏ hơn → ngày nay ăn ít thịt đỏ hơn (C)"],
+  ["3. What hasn't been improved to help people to live longer?", [
+    "Drugs",
+    "Medical technology in hospitals.",
+    "Doctors' understanding of health problems.",
+    "Food allergies"
+  ], 3, "One area that has become worse is allergies → D. Food allergies"],
+  ["4. Which of the following statements is FALSE?", [
+    "Nowadays there are more fitness centres than in the 1970s.",
+    "Nowadays people are less active because they drive instead of walking.",
+    "We shouldn't sit in front of a TV for a long period of time because we can get health problems.",
+    "Nowadays the developments of technology only leave negative effects on people's health."
+  ], 3, "Bẫy từ 'only' (công nghệ có cả mặt tích cực lẫn tiêu cực) → D sai"],
+  ["5. In what ways can computer be bad for our health?", [
+    "People can have problems with their neck, shoulders and back if they don't sit properly for a long period of time.",
+    "People can follow fitness workouts online.",
+    "People can't do enough exercise without apps from computer.",
+    "People suffer from stress because they are allergic to noise from computers."
+  ], 0, "problems with their neck, shoulders and back because they don't sit properly → A"]
+]);
+
+addPart4(2, "Living to change (Kieran)", [
+  ["1. What big change did Kieran want to make in his life?", [
+    "He wanted to lose weight.",
+    "He wanted to be better with his cash.",
+    "He wanted a new career.",
+    "He wanted to eat a healthier diet."
+  ], 1, "worried a lot about money, so decided to make a change → better with his cash (B)"],
+  ["2. Which sentences about Kieran are true before he made the big change?", [
+    "He was overweight.",
+    "He ate at home a lot.",
+    "He was bad at cooking.",
+    "He didn't like living alone."
+  ], 2, "At first, I was a terrible cook = bad at cooking (C)"],
+  ["3. Which sentence about Kieran is TRUE before he made the big change?", [
+    "He was overweight.",
+    "He ate at home a lot.",
+    "He was bad at cooking.",
+    "He didn't like living alone."
+  ], 2, "Đề cương lặp lại câu 2 → vẫn chọn C. He was bad at cooking"],
+  ["4. Which of the following DIDN'T Kieran use to save money on clothes?", [
+    "He only bought clothes in the sales.",
+    "He bought clothes that used to be someone else's.",
+    "People bought some of his old clothes.",
+    "He wore things he already owned."
+  ], 0, "Không hề nhắc tới mua đồ giảm giá (in the sales) → A"],
+  ["5. Choose the correct order about Kieran's decisions.", [
+    "eating at home, not getting new things to wear, spending money on education, buying second-hand clothing, finding someone to live with",
+    "not getting new things to wear, finding someone to live with, eating at home, buying second-hand clothing, spending money on education",
+    "buying second-hand clothing, finding someone to live with, eating at home, not getting new things to wear, spending money on education",
+    "spending money on education, eating at home, not getting new things to wear, buying second-hand clothing, finding someone to live with"
+  ], 1, "Thứ tự: ngừng mua quần áo → tìm bạn ở ghép → nấu ăn ở nhà → mua đồ cũ → học nấu ăn (B)"]
+]);
+
+addPart4(3, "The book reviews", [
+  ["1. Which of the followings is from both Margarita's and Tamika's reviews?", [
+    "I liked the love story.",
+    "Marco's character was nothing special.",
+    "The adventure parts were good.",
+    "Martha's character doesn't seem very original."
+  ], 2, "Margarita (adventure exciting) + Tamika (island chase surprising) → C"],
+  ["2. Which of the followings is true about the book's content?", [
+    "The novel is about two people getting together.",
+    "Marco is very talkative.",
+    "The characters stay in Mexico City.",
+    "Martha and Marco have ordinary lives."
+  ], 0, "Truyện tình yêu giữa Martha và Marco → two people getting together (A)"],
+  ["3. Which of the following is false about the reviewers' ideas and options?", [
+    "Margarita liked the love story more than the adventure story.",
+    "Margarita thinks the story would be better without the love story.",
+    "Tamika really likes the author's other books.",
+    "Tamika thinks other people should read the book."
+  ], 0, "Margarita chê chuyện tình yêu nhạt nhẽo, thích phiêu lưu hơn → A sai"],
+  ["4. Which of the followings is from both Oliver's and Mae's reviews?", [
+    "Marco isn't a very interesting character.",
+    "The book doesn't need Marco in it.",
+    "The love story was a bit disappointing.",
+    "The love story was a little confusing."
+  ], 2, "Oliver (wasn't exciting) + Mae (romance was a little dull) → C"],
+  ["5. Which of the followings is true?", [
+    "Oliver doesn't enjoy love stories.",
+    "Oliver thought Marco was too kind to Martha.",
+    "Mae thinks she'll meet someone like Marco in real life.",
+    "Mae likes what Marco says."
+  ], 3, "when he does, he says wonderful things → D. Mae likes what Marco says"]
+]);
+
+addPart4(4, "Galina Amato & Bruno Silva", [
+  ["1. What kind of course are Galina and Bruno taking?", [
+    "an art course",
+    "a music course",
+    "an education course",
+    "a cookery course"
+  ], 2, "Cả hai đều đang học ngành giáo dục → C. an education course"],
+  ["2. Which is false about Galina?", [
+    "Galina is from Italy.",
+    "She's studying art and education.",
+    "She wants to teach art.",
+    "She doesn't live with her family."
+  ], 0, "Học thuộc đáp án chuẩn đề cương → A. Galina is from Italy"],
+  ["3. Which is false about Bruno?", [
+    "Bruno is close to his family.",
+    "Bruno has just started university.",
+    "Bruno's family works hard.",
+    "Bruno wants to try new things as a teacher."
+  ], 1, "Bruno đang học năm cuối (last year), không phải mới bắt đầu → B sai"],
+  ["4. Which is true about Bruno?", [
+    "Bruno teaches adults.",
+    "He is going to university so he can open a private school.",
+    "At the weekend he helps children in his town with homework.",
+    "Bruno spends a lot of time babysitting his sister to help his family."
+  ], 3, "look after my little sister a lot, because my parents work long hours → D"],
+  ["5. Which of the following is a true statement?", [
+    "Bruno lives in a different country where they were born?",
+    "Bruno has more teaching experience than Galina.",
+    "Galina works more than Bruno.",
+    "Bruno spends more time with their friends than Galina."
+  ], 1, "Bruno dạy tiểu học 5 năm, Galina chưa từng dạy ở trường → B đúng"]
+]);
+
+addPart4(5, "We get great pleasure from reading", [
+  ["1. What does the passage mainly discuss?", [
+    "Different types of books",
+    "Different kinds of reading",
+    "Reading as an exercise for the brain",
+    "Reading as a pleasurable activity"
+  ], 3, "Tiêu đề: We get great pleasure from reading → D. Reading as a pleasurable activity"],
+  ["2. According to paragraph 1, which of the following is NOT true?", [
+    "Ordinary people may think that philosophy and science are difficult.",
+    "Reading about mathematics is mentally entertaining for a mathematician.",
+    "Philosophers and scientists do not read for pleasure.",
+    "A more advanced person takes greater pleasure in reading."
+  ], 2, "Bài bác bỏ quan niệm này ('But this is not true') → C sai"],
+  ["3. The word 'it' in paragraph 2 refers to", [
+    "a new life",
+    "our world",
+    "an opportunity",
+    "a thrill of pleasure"
+  ], 1, "very much like our world and yet different from it → B. our world"],
+  ["4. The word 'immense' in paragraph 3 is closest in meaning to", [
+    "great",
+    "limited",
+    "personal",
+    "controlled"
+  ], 0, "immense = to lớn, bao la = A. great"],
+  ["5. According to the passage, travel books, biographies and memoirs", [
+    "are wonderful novels",
+    "tell stories of well-known places",
+    "are less popular than novels",
+    "are more valuable than novels"
+  ], 2, "First in order of popularity is novel... Next in order of popularity are travel books → C"]
+]);
+
+addPart4(6, "Successful students", [
+  ["1. What is the topic of the passage?", [
+    "Successful and low-academic achieving students",
+    "Successful learners and their learning strategies",
+    "Study skills for high school students",
+    "Effective and ineffective ways of learning"
+  ], 3, "So sánh kỹ năng học hiệu quả và kém hiệu quả → D"],
+  ["2. The word 'prior' in the first paragraph is closest in meaning to........", [
+    "important",
+    "earlier",
+    "forward",
+    "good"
+  ], 1, "prior knowledge = kiến thức có từ trước = B. earlier"],
+  ["3. According to the passage, what can be learnt about passive students?", [
+    "They depend on other people to organize their learning",
+    "They are slow in their studying",
+    "They monitor their understanding",
+    "They know the purpose of studying"
+  ], 0, "assume a passive role and rely on others (teachers, parents) → A"],
+  ["4. In comparison with low-achieving students, successful students use....", [
+    "aimless study techniques",
+    "various study skills",
+    "restricted strategies",
+    "inflexible study ways"
+  ], 1, "employ a variety of study skills → B. various study skills"],
+  ["5. The underlined pronoun 'They' in the last sentence refers to", [
+    "study strategies",
+    "study skills",
+    "low-achieving students",
+    "good studiers"
+  ], 2, "low-achieving students use a restricted range... They cannot explain → C"]
+]);
+
+addPart4(7, "Apollo 11 & Moon Samples", [
+  ["1. The author's purpose in this passage is to", [
+    "demonstrate the difference between basalt and breccia",
+    "explain some of the things learned from space flights",
+    "describe some rock and soil samples",
+    "propose a new theory about the creation of the Moon"
+  ], 1, "Giải thích những điều học được từ mẫu đất đá chuyến bay Apollo 11 → B"],
+  ["2. What does the word 'It' refer to?", [
+    "the impact",
+    "the surface",
+    "breccia",
+    "the Moon"
+  ], 2, "Breccia, the other kind of rock... It consists of small pieces → C. breccia"],
+  ["3. According to the passage, what does Moon soil consist of?", [
+    "Large chunks of volcanic lava",
+    "Streams of gases.",
+    "Tiny pieces of stones and glass.",
+    "Hydrogen and helium."
+  ], 2, "contains small bits of rock and glass → C. Tiny pieces of stones and glass"],
+  ["4. The word 'emitted' in the last paragraph is closest in meaning to", [
+    "vaporized",
+    "sent out",
+    "separated",
+    "set off"
+  ], 1, "emitted by the Sun = phát ra, tỏa ra = B. sent out"],
+  ["5. Which of the following was NOT brought back to the Earth by the astronauts?", [
+    "soil",
+    "breccia",
+    "plant life",
+    "basalt"
+  ], 2, "no trace of animal or plant life in this soil → C. plant life"]
+]);
+
+addPart4(8, "Marianne Moore", [
+  ["1. What is the passage mainly about?", [
+    "Essayists and poets of the 1920's.",
+    "The use of quotations in poetry.",
+    "Marianne Moore's life and work.",
+    "The influence of the Imagists on Marianne Moore"
+  ], 2, "Tiểu sử cuộc đời và sự nghiệp thơ ca của Marianne Moore → C"],
+  ["2. According to the passage, Moore wrote about all of the following EXCEPT", [
+    "artists",
+    "workers",
+    "animals",
+    "fossils"
+  ], 3, "Chủ đề: animals, laborers (workers), artists; 'fossils' chỉ là phép ẩn dụ → D"],
+  ["3. Where did Moore spend most of her adult life?", [
+    "In Carlisle",
+    "In Kirkwood",
+    "In Los Angeles",
+    "In Brooklyn"
+  ], 3, "lived quietly all her life, mostly in Brooklyn, New York → D. In Brooklyn"],
+  ["4. The word 'it' in the third paragraph refers to", [
+    "writing poetry",
+    "earning a living",
+    "becoming famous",
+    "attracting readers"
+  ], 1, "To earn a living is needful, but it can be done in routine ways → B. earning a living"],
+  ["5. The word 'succeeding' in the last paragraph is closest in meaning to", [
+    "successful",
+    "future",
+    "accomplishing",
+    "previous"
+  ], 1, "succeeding generations = các thế hệ kế tiếp = B. future"]
+]);
+
+addPart4(9, "We Bought a Zoo", [
+  ["1. Why did Benjamin want to buy the zoo?", [
+    "He had always wanted to work with animals.",
+    "He wanted to bring his family closer at a difficult time.",
+    "His mother was a zoo keeper.",
+    "Benjamin's father had died and his mother was living alone in a large house in London."
+  ], 1, "live together and take care of each other sau khi bố mất & vợ ốm → B"],
+  ["2. What does the word 'anxious' in paragraph 3, line 4, mean?", [
+    "Enjoyable",
+    "Patient",
+    "Worried",
+    "Generous"
+  ], 2, "anxious = lo lắng = C. Worried"],
+  ["3. '.....in October 2006, they did it' – 'it' refers to:", [
+    "The zoo.",
+    "buying the zoo",
+    "A disaster",
+    "The year 2006"
+  ], 1, "buying the zoo was quite difficult... they did it → B. buying the zoo"],
+  ["4. How did the Hollywood film help Benjamin and the zoo?", [
+    "Lots of people visited the zoo after they saw the film.",
+    "Benjamin wrote a book about it in 2008.",
+    "The Hollywood film producer helped him to keep the zoo.",
+    "The money he got from the film helped to run the zoo."
+  ], 3, "money Benjamin earned from it helped to pay the bills and keep the zoo open → D"],
+  ["5. What is the most suitable title for the article?", [
+    "We bought a zoo.",
+    "Benjamin Mee's life and the zoo.",
+    "The Mee and the zoo.",
+    "How we bought a zoo."
+  ], 0, "Tên cuốn sách & bộ phim nổi tiếng trong bài → A. We bought a zoo"]
+]);
+
+addPart4(10, "Fathers these days", [
+  ["1. Fathers these days are...", [
+    "More distant",
+    "More hands-on",
+    "Younger",
+    "Happier"
+  ], 1, "chơi với con, nấu bữa ăn cho con = xắn tay vào làm = B. More hands-on"],
+  ["2. One of the keys to good parenting is....", [
+    "Being supportive",
+    "Getting involved early",
+    "Reading the research",
+    "Do many tasks of parenting."
+  ], 1, "Getting involved early is essential for men → B"],
+  ["3. Fathers can have a good influence on their children by...", [
+    "Being distant.",
+    "Demanding good school results.",
+    "Talking about the outside world.",
+    "Help the children keep away from problems at school."
+  ], 2, "talking to them about the outside world of work, money, sport → C"],
+  ["4. 'They are not always sure what to do...'. 'They' refers to:", [
+    "New fathers",
+    "Young babies",
+    "Friends and family",
+    "Many tasks"
+  ], 0, "When I talked to new fathers... They are not always sure → A. New fathers"],
+  ["5. The article is about:", [
+    "Paternity in the past",
+    "Why men want to look after the children.",
+    "The children's benefits of being distant from their fathers.",
+    "The changes in paternity these days."
+  ], 3, "So sánh vai trò làm cha ngày xưa và sự thay đổi ngày nay → D"]
+]);
+
+// ==================== PART 5 (10 Tests - 100 câu) ====================
+addPart5(1, "The 11-year-old artist", [
+  ["(1) Daniel Johnson is ___ 11-year-old artist.", ["a", "an", "the", "no article"], 1, "11 (eleven) bắt đầu bằng nguyên âm → an"],
+  ["(2) ...near his home in Scotland, ___ the young artist has lived all his life.", ["which", "where", "that", "to whom"], 1, "Chỉ nơi chốn (in Scotland) → where"],
+  ["(3) Daniel has been an artist ___ he first started painting...", ["when", "during", "since", "while"], 2, "Hiện tại hoàn thành (has been) + mốc quá khứ → since"],
+  ["(4) ...on a family holiday ___ the age of 5.", ["at", "in", "to", "of"], 0, "Cụm cố định: at the age of + tuổi"],
+  ["(5) ...they agreed the boy had something ___.", ["speciality", "special", "specialize", "specially"], 1, "something + tính từ → special"],
+  ["(6) ...and got a lot of ___ from the media.", ["aim", "purpose", "attention", "challenge"], 2, "get attention from the media: nhận sự chú ý từ truyền thông"],
+  ["(7) When his paintings go on ___, they are bought...", ["sell", "bought", "sale", "purchase"], 2, "Cụm cố định: go on sale (được bày bán)"],
+  ["(8) ...bought for very large ___ of money...", ["amounts", "lots", "plenty", "much"], 0, "large amounts of money (money không đếm được)"],
+  ["(9) ...they need to ___ sure that he has...", ["assert", "claim", "make", "be"], 2, "Cụm cố định: make sure (đảm bảo)"],
+  ["(10) ...that he has a normal ___.", ["childhood", "childish", "childlike", "children"], 0, "normal childhood: tuổi thơ bình thường"]
+]);
+
+addPart5(2, "Michelle Obama", [
+  ["(1) Michelle La Vaughn Robinson was born ___ 1964 in Chicago.", ["in", "on", "since", "at"], 0, "in + năm (in 1964)"],
+  ["(2) ...and the family ___ in a one-bedroom apartment...", ["existed", "had", "lived", "slept"], 2, "lived in an apartment: sống trong căn hộ"],
+  ["(3) ...but they didn't ___ have a lot of money.", ["wanted to", "managed to", "exactly", "use to"], 3, "didn't use to + V: đã từng không có"],
+  ["(4) ___, the Robinson children learned two things...", ["However", "Moreover", "Furthermore", "So that"], 0, "Tương phản với việc nhà nghèo → However (Tuy nhiên)"],
+  ["(5) ...the first was that... and the ___ was that...", ["besides", "second", "next to", "then"], 1, "the first ... and the second ..."],
+  ["(6) ...more important to work hard than to ___ a lot of money.", ["keep", "try", "afford", "earn"], 3, "earn money: kiếm tiền"],
+  ["(7) ...and got a ___ at Princeton University.", ["placement", "placing", "place", "position"], 2, "get a place at university: đỗ vào đại học"],
+  ["(8) ...in a Chicago company, ___ she met her future husband...", ["which", "where", "that", "when"], 1, "Chỉ nơi chốn (company) → where"],
+  ["(9) They ___ married in 1992.", ["got", "engaged", "is", "decided"], 0, "got married: kết hôn"],
+  ["(10) ...one of the most ___ women in the world.", ["fame", "famous", "infamous", "famously"], 1, "most + tính từ → famous (nổi tiếng)"]
+]);
+
+addPart5(3, "Hi Lee (Barbara)", [
+  ["(1) I'm ___ I haven't written for a few weeks...", ["glad", "happy", "sorry", "sad"], 2, "I'm sorry I haven't written: Xin lỗi vì đã không viết thư"],
+  ["(2) ...I'm very busy ___ for my exams at the moment.", ["repairing", "remembering", "revising", "memorying"], 2, "revise for exams: ôn thi"],
+  ["(3) If I pass them all, I'll ___ a place at university!", ["put", "get", "have", "enter"], 1, "get a place at university: đỗ đại học"],
+  ["(4) I ___ painting and drawing...", ["fancy", "dislike", "fascinated", "interested"], 0, "fancy + V-ing: thích làm gì"],
+  ["(5) ...and can't ___ doing anything else!", ["imagination", "imagine", "imaginative", "imaginatively"], 1, "can't imagine + V-ing: không thể tưởng tượng"],
+  ["(6) ...I should study something more ___...", ["useful", "useless", "usefully", "disused"], 0, "more + tính từ tích cực → useful (hữu ích)"],
+  ["(7) ...he'll get an ___ job abroad.", ["exciting", "excited", "wonderful", "interested"], 0, "an + nguyên âm + tính từ chỉ tính chất vật → exciting job"],
+  ["(8) Of course, I'll be ___ for him...", ["pleasure", "pleased", "pleasing", "unpleasure"], 1, "be pleased for someone: mừng cho ai"],
+  ["(9) ...even ___ you can't come to Edinburgh this year...", ["when", "though", "if", "that"], 2, "even if: ngay cả khi"],
+  ["(10) ...you'll be ___ to visit one day.", ["could", "ability", "impossible", "able"], 3, "be able to V: có thể làm gì"]
+]);
+
+addPart5(4, "Learning to swim", [
+  ["(1) ...I was walking near a river and I ___ and fell in.", ["hit", "slipped", "slippery", "broke"], 1, "slipped and fell in: trượt chân và ngã xuống sông"],
+  ["(2) I ___ lucky because a friend was there...", ["had", "met", "felt", "imagined"], 2, "felt lucky: cảm thấy may mắn"],
+  ["(3) To ___ with, I hated getting...", ["start", "let", "begin", "end"], 2, "Cụm nối đầu câu: To begin with (Ban đầu)"],
+  ["(4) ...hated getting ___ the water, at the swimming pool.", ["down", "into", "under", "in"], 1, "get into the water: xuống nước"],
+  ["(5) After that, I found it ___ to get into the water.", ["difficult", "difficulty", "easily", "easier"], 3, "Tắm trước rồi thấy dễ xuống nước hơn → easier"],
+  ["(6) I started with very easy ___ like putting my head underwater.", ["lessons", "exercises", "timetables", "schedules"], 1, "easy exercises: các bài tập khởi động dễ"],
+  ["(7) I felt a ___ stupid.", ["little", "small", "tiny", "bit"], 3, "a bit + tính từ: hơi một chút"],
+  ["(8) Learning ___ to breathe out underwater was difficult...", ["why", "how", "when", "what"], 1, "learn how to V: học cách làm gì"],
+  ["(9) After a while, I made good ___.", ["advanced", "simple", "basic", "progress"], 3, "Cụm cố định: make good progress (tiến bộ tốt)"],
+  ["(10) And I'm a lot more ___ near the river now!", ["careless", "careful", "pay attention", "thoughtful"], 1, "be careful: cẩn thận"]
+]);
+
+addPart5(5, "Studio Ghibli", [
+  ["(1) Studio Ghibli is one of the most ___ animation studios...", ["well-known", "intelligent", "careful", "ambitious"], 0, "well-known = famous: nổi tiếng"],
+  ["(2) Between 1985 and 2014, it ___ over 20 animated films.", ["production", "produce", "productivity", "productive"], 1, "Vị trí động từ → produce (theo đúng đáp án B trong đề cương)"],
+  ["(3) Most of the films were ___ by Hayao Miyazaki...", ["made", "shown", "directed", "created"], 2, "directed by: được đạo diễn bởi"],
+  ["(4) Ghibli is famous ___ using traditional animation methods.", ["for", "of", "into", "about"], 0, "famous for: nổi tiếng về"],
+  ["(5) Most ___ animation is done using computers.", ["fashionable", "old", "new", "modern"], 3, "modern animation: hoạt hình hiện đại"],
+  ["(6) ...every frame is drawn ___ hand.", ["from", "with", "by", "in"], 2, "by hand: bằng tay"],
+  ["(7) There are thousands of frames in a ___!", ["document", "film", "scenery", "sound"], 1, "frames in a film: khung hình trong một bộ phim"],
+  ["(8) First, a script is ___ and it is used to create a storyboard.", ["writer", "writing", "written", "wrote"], 2, "Bị động: is + V3 (written)"],
+  ["(9) Speaking parts are recorded as ___ as music.", ["possible", "good", "fast", "well"], 3, "as well as: cũng như là"],
+  ["(10) Finally, all the pieces are put ___ by the director.", ["the same", "column", "together", "aside"], 2, "put together: ghép lại với nhau"]
+]);
+
+addPart5(6, "Hi Phil (Betty)", [
+  ["(1) Can you recommend a good restaurant ___ my Mum's birthday...", ["to", "with", "for", "at"], 2, "for my Mum's birthday: cho sinh nhật mẹ"],
+  ["(2) ...if we chose the ___ restaurant as last year.", ["like", "similar", "identical", "same"], 3, "the same ... as: giống như"],
+  ["(3) There ___ so many problems.", ["were", "are", "is", "was"], 0, "Quá khứ + danh từ số nhiều (problems) → were"],
+  ["(4) ...not enough waiters ___ we had to wait a long time.", ["but", "so", "although", "because"], 1, "Chỉ kết quả → so (vì vậy)"],
+  ["(5) ...the food was too cold to ___.", ["bite", "eat", "chew", "swallow"], 1, "too cold to eat: quá lạnh để ăn"],
+  ["(6) ...if they used less, the food ___ be much nicer.", ["would", "will", "might", "can"], 0, "Câu điều kiện loại 2 (used) → would"],
+  ["(7) ...the waiter forgot our ___ and we had to ask him three times.", ["to drink", "drinking", "drinks", "drank"], 2, "our + danh từ → drinks (đồ uống)"],
+  ["(8) ___, I never want to go back there again.", ["honest", "dishonest", "honestly", "dishonestly"], 2, "Trạng từ đầu câu → Honestly (Thành thật mà nói)"],
+  ["(9) ...if we could find a ___ Italian restaurant.", ["excellent", "good", "prettier", "well"], 1, "Mạo từ 'a' (không dùng an excellent) → good"],
+  ["(10) ...so I can ___ a table?", ["call", "bring", "put", "book"], 3, "book a table: đặt bàn"]
+]);
+
+addPart5(7, "Coelacanths", [
+  ["(1) They are fish ___ lived in the sea a long, long time ago.", ["which", "who", "where", "whose"], 0, "Đại từ quan hệ thay cho vật/động vật (fish) → which"],
+  ["(2) In fact, scientists ___ to think that they disappeared...", ["have", "need", "manage", "used"], 3, "used to think: đã từng nghĩ"],
+  ["(3) But one day ___ 1938, Marjorie...", ["in", "since", "during", "for"], 0, "in + năm (in 1938)"],
+  ["(4) ...a young woman who ___ in a museum...", ["made", "working", "worked", "did"], 2, "Thì quá khứ đơn → worked"],
+  ["(5) ...received an ___ phone call.", ["expecting", "expectation", "unexpected", "unexpectedly"], 2, "an + tính từ → unexpected (bất ngờ)"],
+  ["(6) ...and took it ___ to the museum.", ["after", "back", "for", "into"], 1, "take it back to: mang nó về lại"],
+  ["(7) ...a science teacher ___ a nearby university...", ["in", "on", "beside", "at"], 3, "at a university: tại trường đại học"],
+  ["(8) It soon became the most ___ fish in the world!", ["fame", "famous", "rare", "beautiful"], 1, "the most + tính từ dài → famous"],
+  ["(9) Scientists gave it the ___ Latimeria chalumnae...", ["named", "namely", "name", "naming"], 2, "give it the name: đặt cho nó cái tên"],
+  ["(10) ...is now known ___ Latimer's Landing.", ["like", "same", "as", "similar"], 2, "be known as: được biết đến như là"]
+]);
+
+addPart5(8, "The whale Mila", [
+  ["(1) ...a Chinese zoo organized a special diving ___.", ["competition", "competitor", "compete", "competitive"], 0, "diving competition: cuộc thi lặn"],
+  ["(2) The water ___ 7 metres deep and very cold...", ["is", "was", "will", "are"], 1, "Kể chuyện quá khứ + water không đếm được → was"],
+  ["(3) 26-year-old Yang Yun was a ___ diver...", ["confidence", "confidential", "confident", "self-confident"], 2, "a + tính từ + danh từ → confident diver"],
+  ["(4) ...hadn't ever dived in such cold, deep ___ before.", ["land", "sand", "coral", "water"], 3, "cold, deep water: vùng nước sâu và lạnh"],
+  ["(5) When Yun had been in the pool for a ___ minutes...", ["little", "many", "amount", "few"], 3, "a few + danh từ đếm được số nhiều (minutes)"],
+  ["(6) ...felt very anxious and afraid ___ that moment.", ["in", "at", "on", "to"], 1, "Cụm cố định: at that moment (vào khoảnh khắc đó)"],
+  ["(7) ...Mila had seen that Yun was in trouble, and wanted to ___ her.", ["find", "support", "help", "believe"], 2, "help her: giúp đỡ cô ấy"],
+  ["(8) ...they ___ that the whale had saved the woman.", ["understood", "misunderstood", "understanding", "outstanding"], 0, "understood: hiểu ra rằng"],
+  ["(9) ...an incredible force pushing her ___...", ["highly", "up", "down", "disappointed"], 1, "pushing her up: đẩy cô ấy trồi lên mặt nước"],
+  ["(10) ...the whale that saved her ___.", ["living", "vital", "life", "alive"], 2, "save her life: cứu mạng cô ấy"]
+]);
+
+addPart5(9, "Star Trek", [
+  ["(1) Star Trek started ___ a TV series in 1966...", ["like", "as", "the same", "identically"], 1, "started as: bắt đầu với tư cách là"],
+  ["(2) The series is set ___ the 23rd century.", ["in", "on", "at", "to"], 0, "in the 23rd century: ở thế kỷ 23"],
+  ["(3) ...explore space and travel to ___ planets.", ["difference", "differentially", "different", "differ"], 2, "different planets: các hành tinh khác nhau"],
+  ["(4) Together, they face ___ and have many strange adventures.", ["dangerous", "dangerously", "endanger", "danger"], 3, "face + danh từ → face danger (đối mặt nguy hiểm)"],
+  ["(5) ...seemed amazing in ___ 1960s.", ["the", "in", "since", "at"], 0, "in the 1960s: vào những năm 1960"],
+  ["(6) For example, there ___ a machine called a 'replicator'...", ["will be", "are", "was", "had"], 2, "Quá khứ + danh từ số ít (a machine) → there was"],
+  ["(7) ...which could ___ food and small objects very quickly...", ["do", "make", "cook", "repair"], 1, "make food and small objects: tạo ra thức ăn và đồ vật nhỏ"],
+  ["(8) ...and another ___ a 'communicator'...", ["called", "named", "had", "gave"], 0, "another called...: một thiết bị khác được gọi là"],
+  ["(9) ...let the crew talk to each other ___ when they were away...", ["direction", "director", "directly", "indirect"], 2, "Trạng từ bổ nghĩa cho động từ talk → directly (trực tiếp)"],
+  ["(10) ...many different Star Trek TV series and films have been ___.", ["done", "made", "shown", "acted"], 1, "films have been made: các bộ phim được sản xuất"]
+]);
+
+addPart5(10, "New Species of Lizard", [
+  ["(1) ...Ngo Van Tri was ___ a small village restaurant.", ["in", "on", "at", "to"], 2, "at a restaurant: tại một nhà hàng"],
+  ["(2) He saw a box of lizards on a ___ bench.", ["cooker", "cook", "cookery", "cooking"], 3, "cooking bench: bàn bếp nấu ăn"],
+  ["(3) ...so he ___ some pictures to a biologist in America...", ["hang", "drew", "bought", "sent"], 3, "sent some pictures to: gửi vài bức ảnh cho"],
+  ["(4) ...to a ___ in America, L. Lee Grismer.", ["biologist", "biology", "historian", "sculpture"], 0, "biologist: nhà sinh vật học"],
+  ["(5) He wanted to be the scientist to make the ___...", ["discover", "discovery", "inventor", "invention"], 1, "make the discovery: thực hiện khám phá này"],
+  ["(6) ___, unfortunately, while he was travelling...", ["However", "But", "Moreover", "So"], 0, "Đứng đầu câu trước dấu phẩy → However"],
+  ["(7) ...cooked the lizards and ___ them to his customers.", ["gave", "ate", "served", "brought"], 2, "served them to customers: phục vụ món đó cho khách"],
+  ["(8) When Grismer ___, they were all gone.", ["arrived", "came", "saw", "returned"], 0, "When Grismer arrived: Khi Grismer tới nơi"],
+  ["(9) ...also had the ___ kind of lizard on their menu.", ["identical", "like", "same", "look like"], 2, "the same kind of: cùng một loài"],
+  ["(10) The ___ of lizard was new to scientists!", ["species", "kinds", "many", "amount"], 0, "The species of lizard: Loài thằn lằn này"]
+]);
+
+// ============================================================================
+// 2. APPLICATION STATE & STORAGE
+// ============================================================================
+const STORAGE_KEY = 'b1_reading_pink_v2';
+
+const defaultState = {
+  mastered: {},
+  wrong: {},
+  todayDate: new Date().toISOString().slice(0, 10),
+  todayCount: 0,
+  dailyGoal: 25,
+  lastSession: null,
+  settings: {
+    darkMode: false,
+    fontSize: 'md',
+    autoNext: true,
+    studyPeek: false,
+    shuffle: false,
+    badgeClearance: true
+  }
+};
+
+let state = loadState();
+let currentTab = 'home';
+let homeMode = 'single'; // 'single' | 'mix'
+let openParts = { 1: true }; // Part 1 expanded by default
+let mixSelectedParts = { 1: true, 2: false, 3: true, 4: false, 5: true };
+let mixCountLimit = 0; // 0 = all, 20, 50
+let wrongFilterPart = 0; // 0 = all, 1..5
+
+let session = null; // { mode, title, questions, idx, answers, revealed, timerSec, timerId, meta }
+let swipeDir = 'anim-view';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return JSON.parse(JSON.stringify(defaultState));
+    const parsed = JSON.parse(raw);
+    const merged = {
+      ...defaultState,
+      ...parsed,
+      settings: { ...defaultState.settings, ...(parsed.settings || {}) }
+    };
+    const today = new Date().toISOString().slice(0, 10);
+    if (merged.todayDate !== today) {
+      merged.todayDate = today;
+      merged.todayCount = 0;
+    }
+    return merged;
+  } catch (e) {
+    return JSON.parse(JSON.stringify(defaultState));
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {}
+}
+
+// ============================================================================
+// 3. THEME, FONT & BADGE CLEARANCE HELPERS
+// ============================================================================
+function applyThemeAndFont() {
+  const html = document.documentElement;
+  const app = document.getElementById('app');
+  const moon = document.getElementById('icon-moon');
+  const sun = document.getElementById('icon-sun');
+
+  if (state.settings.darkMode) {
+    html.classList.add('dark');
+    moon.classList.add('hidden');
+    sun.classList.remove('hidden');
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1A0F16');
+  } else {
+    html.classList.remove('dark');
+    moon.classList.remove('hidden');
+    sun.classList.add('hidden');
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#FFF5F8');
+  }
+
+  if (state.settings.badgeClearance) {
+    html.classList.remove('no-badge-clearance');
+  } else {
+    html.classList.add('no-badge-clearance');
+  }
+
+  app.classList.remove('fs-sm', 'fs-md', 'fs-lg');
+  app.classList.add(`fs-${state.settings.fontSize || 'md'}`);
+}
+
+function toggleTheme() {
+  state.settings.darkMode = !state.settings.darkMode;
+  saveState();
+  applyThemeAndFont();
+}
+
+function cycleFontSize() {
+  const order = ['sm', 'md', 'lg'];
+  const cur = order.indexOf(state.settings.fontSize || 'md');
+  state.settings.fontSize = order[(cur + 1) % order.length];
+  saveState();
+  applyThemeAndFont();
+  const labels = { sm: 'Nhỏ', md: 'Vừa', lg: 'Lớn' };
+  showToast(`Cỡ chữ: ${labels[state.settings.fontSize]}`);
+}
+
+function toggleSetting(key) {
+  state.settings[key] = !state.settings[key];
+  saveState();
+  applyThemeAndFont();
+  if (session) {
+    swipeDir = '';
+    renderMain();
+  } else {
+    renderMain();
+  }
+}
+
+function updateWrongBadge() {
+  const count = Object.keys(state.wrong).length;
+  const badge = document.getElementById('badge-wrong');
+  if (count > 0) {
+    badge.textContent = count > 99 ? '99+' : count;
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+}
+
+// ============================================================================
+// 4. NAVIGATION & HEADER CONTROL
+// ============================================================================
+function setHeader(title, sub, inSession, quickLabel = '') {
+  const btnBack = document.getElementById('btn-back');
+  const titleWrap = document.getElementById('header-title-wrap');
+  const quickBtn = document.getElementById('btn-quick-switch');
+  const tabBar = document.getElementById('tab-bar');
+  const timerEl = document.getElementById('exam-timer');
+
+  document.getElementById('header-title').textContent = title;
+  document.getElementById('header-sub').textContent = sub;
+
+  if (inSession) {
+    btnBack.classList.remove('hidden');
+    tabBar.classList.add('hidden');
+    if (session && session.mode === 'exam') {
+      titleWrap.classList.remove('hidden');
+      quickBtn.classList.add('hidden');
+      timerEl.classList.remove('hidden');
+    } else {
+      titleWrap.classList.add('hidden');
+      quickBtn.classList.remove('hidden');
+      document.getElementById('quick-switch-label').textContent = quickLabel || title;
+      timerEl.classList.add('hidden');
+    }
+  } else {
+    btnBack.classList.add('hidden');
+    titleWrap.classList.remove('hidden');
+    quickBtn.classList.add('hidden');
+    timerEl.classList.add('hidden');
+    tabBar.classList.remove('hidden');
+  }
+}
+
+function switchTab(tab) {
+  if (session) {
+    exitQuizSession(true);
+  }
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    const isActive = btn.dataset.tab === tab;
+    if (isActive) {
+      btn.classList.remove('text-sakuraMuted/70', 'dark:text-berryMuted/70');
+      btn.classList.add('text-sakuraPrimary', 'dark:text-sakuraLight');
+    } else {
+      btn.classList.add('text-sakuraMuted/70', 'dark:text-berryMuted/70');
+      btn.classList.remove('text-sakuraPrimary', 'dark:text-sakuraLight');
+    }
+  });
+  renderMain();
+}
+
+function exitQuizSession(silent = false) {
+  if (session && session.mode === 'exam' && !session.submitted && !silent) {
+    showConfirm('Thoát bài thi thử?', 'Kết quả bài thi đang làm sẽ không được lưu.', () => {
+      stopExamTimer();
+      session = null;
+      switchTab(currentTab);
+    });
+    return;
+  }
+  stopExamTimer();
+  session = null;
+  switchTab(currentTab);
+}
+
+// ============================================================================
+// 5. MAIN ROUTER
+// ============================================================================
+function renderMain() {
+  const main = document.getElementById('main-content');
+  if (session) {
+    renderQuizView(main);
+    return;
+  }
+  if (currentTab === 'home') {
+    setHeader('Đọc B1 • Học Thuộc 🌸', `${Object.keys(state.mastered).length}/${QUESTIONS.length} câu đã thuộc`, false);
+    renderHomeTab(main);
+  } else if (currentTab === 'wrong') {
+    const wc = Object.keys(state.wrong).length;
+    setHeader('Ngân Hàng Câu Sai 💗', wc ? `${wc} câu cần phục thù` : 'Sạch bóng câu sai!', false);
+    renderWrongTab(main);
+  } else if (currentTab === 'exam') {
+    setHeader('Thi Thử Chuẩn B1 ✨', '35 câu • 45 phút • Thang 30đ', false);
+    renderExamTab(main);
+  } else if (currentTab === 'settings') {
+    setHeader('Cài Đặt & Tiến Độ ⚙️', 'Tuỳ chỉnh trải nghiệm học thuộc', false);
+    renderSettingsTab(main);
+  }
+}
+
+// ============================================================================
+// 6. HOME TAB (CHOOSE PART / TEST OR MIX PARTS)
+// ============================================================================
+const PART_META = [
+  { part: 1, icon: '💬', name: 'Part 1 • Biển báo & Tin nhắn', desc: 'Chọn ý diễn đạt đúng (3 lựa chọn)', tests: 6 },
+  { part: 2, icon: '🧩', name: 'Part 2 • Ghép người & Đoạn văn', desc: 'Ghép 5 mô tả với 5 đoạn A–E', tests: 5 },
+  { part: 3, icon: '✅', name: 'Part 3 • Đọc hiểu Đúng / Sai', desc: '10 nhận định True / False theo bài', tests: 10 },
+  { part: 4, icon: '📖', name: 'Part 4 • Đọc hiểu Trắc nghiệm', desc: 'Đọc đoạn văn chọn A, B, C, D', tests: 10 },
+  { part: 5, icon: '✍️', name: 'Part 5 • Điền từ vào chỗ trống', desc: 'Ngữ pháp & từ vựng A, B, C, D', tests: 10 }
+];
+
+function toggleAccordion(partNum) {
+  openParts[partNum] = !openParts[partNum];
+  renderHomeTab(document.getElementById('main-content'));
+}
+
+function setHomeMode(mode) {
+  homeMode = mode;
+  renderHomeTab(document.getElementById('main-content'));
+}
+
+function toggleMixPart(p) {
+  mixSelectedParts[p] = !mixSelectedParts[p];
+  renderHomeTab(document.getElementById('main-content'));
+}
+
+function setMixCount(cnt) {
+  mixCountLimit = cnt;
+  renderHomeTab(document.getElementById('main-content'));
+}
+
+function renderHomeTab(container) {
+  const masteredCount = Object.keys(state.mastered).length;
+  const total = QUESTIONS.length;
+  const pct = Math.round((masteredCount / total) * 100);
+  const goalPct = Math.min(100, Math.round((state.todayCount / state.dailyGoal) * 100));
+
+  let partCardsHtml = '';
+
+  if (homeMode === 'single') {
+    partCardsHtml = PART_META.map(pm => {
+      const partQs = QUESTIONS.filter(q => q.part === pm.part);
+      const partMastered = partQs.filter(q => state.mastered[q.id]).length;
+      const partPct = Math.round((partMastered / partQs.length) * 100);
+      const isOpen = !!openParts[pm.part];
+
+      let testsGrid = '';
+      for (let t = 1; t <= pm.tests; t++) {
+        const tQs = partQs.filter(q => q.test === t);
+        const tMastered = tQs.filter(q => state.mastered[q.id]).length;
+        const tDone = tMastered === tQs.length && tQs.length > 0;
+        const subTitle = tQs[0]?.testTitle ? tQs[0].testTitle : `${tQs.length} câu`;
+        testsGrid += `
+          <button onclick="startTestSession(${pm.part}, ${t})" class="p-3 rounded-[16px] border text-left transition active:scale-[0.97] ${tDone ? 'bg-mintBg/70 dark:bg-emerald-950/30 border-mintBorder dark:border-emerald-800' : 'bg-sakuraBg/75 dark:bg-berryBg/70 border-sakuraBorder/80 dark:border-berryBorder'}">
+            <div class="flex items-center justify-between gap-1 mb-0.5">
+              <span class="font-extrabold text-[13.5px] ${tDone ? 'text-mintText dark:text-emerald-300' : 'text-sakuraText dark:text-berryText'}">Đề ${t} ${tDone ? '✓' : ''}</span>
+              <span class="text-[11px] font-bold ${tDone ? 'text-mintText dark:text-emerald-400' : 'text-sakuraPrimary dark:text-sakuraLight'} tabular-nums">${tMastered}/${tQs.length}</span>
+            </div>
+            <div class="text-[11px] text-sakuraMuted dark:text-berryMuted truncate">${escapeHtml(subTitle)}</div>
+          </button>
+        `;
+      }
+
+      return `
+        <div class="bg-sakuraCard dark:bg-berryCard rounded-[22px] p-4 shadow-rose border border-sakuraBorder/80 dark:border-berryBorder">
+          <div class="flex items-start justify-between gap-2.5">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-11 h-11 rounded-[15px] pink-gradient-soft border border-sakuraBorder/70 dark:border-berryBorder flex items-center justify-center text-[20px] shrink-0">${pm.icon}</div>
+              <div class="min-w-0">
+                <h3 class="font-extrabold text-[15px] truncate">${pm.name}</h3>
+                <p class="text-[11.5px] text-sakuraMuted dark:text-berryMuted truncate">${pm.desc}</p>
+              </div>
+            </div>
+            <span class="text-[12px] font-black text-sakuraPrimary dark:text-sakuraLight shrink-0 tabular-nums">${partMastered}/${partQs.length}</span>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="w-full h-1.5 rounded-full bg-sakuraSoft dark:bg-berrySoft overflow-hidden mt-3 mb-3">
+            <div class="h-full pink-gradient rounded-full transition-all duration-300" style="width:${partPct}%"></div>
+          </div>
+
+          <!-- Direct Action Buttons: Learn Whole Part OR Pick Specific Test -->
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="startPartSession(${pm.part})" class="py-2.5 px-3 rounded-[14px] pink-gradient text-white font-extrabold text-[12.5px] shadow-roseGlow active:scale-95 transition flex items-center justify-center gap-1">
+              <span>⚡ Học cả Part (${partQs.length})</span>
+            </button>
+            <button onclick="toggleAccordion(${pm.part})" class="py-2.5 px-3 rounded-[14px] bg-sakuraSoft dark:bg-berrySoft text-sakuraPrimary dark:text-sakuraLight font-extrabold text-[12.5px] active:scale-95 transition flex items-center justify-center gap-1">
+              <span>Chọn Đề (${pm.tests})</span>
+              <svg class="w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+          </div>
+
+          <!-- Expandable Tests Grid -->
+          <div class="acc-body ${isOpen ? 'open' : ''}">
+            <div class="acc-inner">
+              <div class="grid grid-cols-2 gap-2 pt-3 mt-3 border-t border-sakuraBorder/50 dark:border-berryBorder">
+                ${testsGrid}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } else {
+    // Multi-part mix selector
+    const selectedList = [1, 2, 3, 4, 5].filter(p => mixSelectedParts[p]);
+    const poolCount = QUESTIONS.filter(q => mixSelectedParts[q.part]).length;
+    const actualCount = mixCountLimit > 0 ? Math.min(mixCountLimit, poolCount) : poolCount;
+
+    partCardsHtml = `
+      <div class="bg-sakuraCard dark:bg-berryCard rounded-[22px] p-4 shadow-rose border border-sakuraBorder/80 dark:border-berryBorder space-y-3.5">
+        <div>
+          <h3 class="font-extrabold text-[15px]">Tích chọn các Part muốn gộp</h3>
+          <p class="text-[12px] text-sakuraMuted dark:text-berryMuted">Luyện tổng hợp nhiều dạng bài cùng lúc</p>
+        </div>
+
+        <div class="space-y-2">
+          ${PART_META.map(pm => {
+            const checked = !!mixSelectedParts[pm.part];
+            const cnt = QUESTIONS.filter(q => q.part === pm.part).length;
+            return `
+              <button onclick="toggleMixPart(${pm.part})" class="w-full p-3 rounded-[16px] border flex items-center justify-between transition active:scale-[0.98] ${checked ? 'pink-gradient-soft border-sakuraPrimary dark:border-sakuraLight' : 'bg-sakuraBg/50 dark:bg-berryBg/50 border-sakuraBorder/70 dark:border-berryBorder'}">
+                <div class="flex items-center gap-2.5 text-left">
+                  <span class="text-[18px]">${pm.icon}</span>
+                  <div>
+                    <div class="font-extrabold text-[13.5px]">${pm.name}</div>
+                    <div class="text-[11px] text-sakuraMuted dark:text-berryMuted">${cnt} câu hỏi</div>
+                  </div>
+                </div>
+                <div class="w-6 h-6 rounded-full flex items-center justify-center font-black text-[12px] ${checked ? 'pink-gradient text-white shadow-xs' : 'border-2 border-sakuraBorder dark:border-berryBorder text-transparent'}">✓</div>
+              </button>
+            `;
+          }).join('')}
+        </div>
+
+        <div>
+          <div class="text-[12px] font-extrabold text-sakuraMuted dark:text-berryMuted mb-1.5">Giới hạn số câu mỗi lượt:</div>
+          <div class="grid grid-cols-3 gap-2">
+            ${[
+              { val: 0, label: `Tất cả (${poolCount})` },
+              { val: 20, label: '20 câu' },
+              { val: 50, label: '50 câu' }
+            ].map(opt => `
+              <button onclick="setMixCount(${opt.val})" class="py-2 rounded-[12px] border text-[12.5px] font-extrabold transition active:scale-95 ${mixCountLimit === opt.val ? 'pink-gradient text-white border-transparent shadow-xs' : 'bg-sakuraBg dark:bg-berryBg border-sakuraBorder dark:border-berryBorder text-sakuraText dark:text-berryText'}">
+                ${opt.label}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <button onclick="startMixSession()" ${selectedList.length === 0 ? 'disabled' : ''} class="w-full py-3.5 rounded-[16px] pink-gradient text-white font-extrabold text-[15px] shadow-roseGlow active:scale-95 transition disabled:opacity-40">
+          🚀 Bắt đầu học (${actualCount} câu)
+        </button>
+      </div>
+    `;
+  }
+
+  const resumeBanner = state.lastSession ? `
+    <button onclick="resumeLastSession()" class="w-full p-3.5 rounded-[20px] bg-sakuraCard dark:bg-berryCard border border-sakuraBorder dark:border-berryBorder shadow-rose flex items-center justify-between gap-3 active:scale-[0.98] transition text-left">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-[14px] pink-gradient text-white flex items-center justify-center font-black text-[16px] shrink-0 shadow-xs">▶</div>
+        <div class="min-w-0">
+          <div class="text-[11px] font-extrabold uppercase tracking-wider text-sakuraPrimary dark:text-sakuraLight">Học tiếp phần đang dở</div>
+          <div class="font-extrabold text-[14px] truncate">${escapeHtml(state.lastSession.label)}</div>
+        </div>
+      </div>
+      <span class="text-[12px] font-extrabold text-sakuraPrimary dark:text-sakuraLight shrink-0">Tiếp →</span>
+    </button>
+  ` : '';
+
+  container.innerHTML = `
+    <div class="anim-view p-4 space-y-3.5 pb-8">
+      <!-- Daily Goal & Total Progress Card -->
+      <div class="pink-gradient rounded-[24px] p-4 text-white shadow-roseMd relative overflow-hidden">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="text-[11.5px] font-bold uppercase tracking-wider text-white/85">Mục tiêu hôm nay 🌸</div>
+            <div class="text-[22px] font-black leading-tight mt-0.5">${state.todayCount} / ${state.dailyGoal} câu</div>
+            <div class="text-[12px] text-white/90 mt-1 font-medium">Tổng đã thuộc: <b>${masteredCount}/${total}</b> (${pct}%)</div>
+          </div>
+          <div class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-xs border-2 border-white/70 flex flex-col items-center justify-center shrink-0">
+            <span class="text-[15px] font-black leading-none">${goalPct}%</span>
+            <span class="text-[9.5px] font-bold opacity-90 mt-0.5">Hôm nay</span>
+          </div>
+        </div>
+        <div class="w-full h-2 rounded-full bg-black/15 overflow-hidden mt-3">
+          <div class="h-full bg-white rounded-full transition-all duration-300" style="width:${pct}%"></div>
+        </div>
+      </div>
+
+      ${resumeBanner}
+
+      <!-- Segmented Mode Selector -->
+      <div class="p-1 rounded-[16px] bg-sakuraSoft/80 dark:bg-berrySoft border border-sakuraBorder/70 dark:border-berryBorder grid grid-cols-2 gap-1">
+        <button onclick="setHomeMode('single')" class="py-2 rounded-[13px] text-[13px] font-extrabold transition ${homeMode === 'single' ? 'bg-white dark:bg-berryCard text-sakuraPrimary dark:text-sakuraLight shadow-xs' : 'text-sakuraMuted dark:text-berryMuted'}">
+          📚 Chọn từng Part / Đề
+        </button>
+        <button onclick="setHomeMode('mix')" class="py-2 rounded-[13px] text-[13px] font-extrabold transition ${homeMode === 'mix' ? 'bg-white dark:bg-berryCard text-sakuraPrimary dark:text-sakuraLight shadow-xs' : 'text-sakuraMuted dark:text-berryMuted'}">
+          🔀 Học gộp nhiều Part
+        </button>
+      </div>
+
+      <!-- Parts List or Mix Panel -->
+      <div class="space-y-3">
+        ${partCardsHtml}
+      </div>
+
+      <!-- Quick Netlify Clearance Toggle at Bottom of Home -->
+      <div class="bg-sakuraCard dark:bg-berryCard rounded-[20px] p-3.5 border border-sakuraBorder/70 dark:border-berryBorder flex items-center justify-between gap-3">
+        <div>
+          <div class="font-bold text-[13px]">Chừa khoảng trống đáy màn hình</div>
+          <div class="text-[11px] text-sakuraMuted dark:text-berryMuted">Tránh thanh "Powered by Netlify" che nút</div>
+        </div>
+        <button onclick="toggleSetting('badgeClearance')" class="pink-switch ${state.settings.badgeClearance ? 'active' : 'bg-pink-200 dark:bg-berryBorder'}"></button>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================================
+// 7. WRONG BANK TAB
+// ============================================================================
+function setWrongFilter(p) {
+  wrongFilterPart = p;
+  renderWrongTab(document.getElementById('main-content'));
+}
+
+function renderWrongTab(container) {
+  const wrongIds = Object.keys(state.wrong);
+  const allWrongQs = QUESTIONS.filter(q => state.wrong[q.id]);
+  const filteredQs = wrongFilterPart === 0 ? allWrongQs : allWrongQs.filter(q => q.part === wrongFilterPart);
+
+  if (allWrongQs.length === 0) {
+    container.innerHTML = `
+      <div class="anim-view p-6 flex flex-col items-center justify-center text-center min-h-[65dvh]">
+        <div class="w-20 h-20 rounded-full pink-gradient-soft border border-sakuraBorder dark:border-berryBorder flex items-center justify-center text-[36px] mb-4 shadow-rose">🌸</div>
+        <h2 class="text-[18px] font-extrabold mb-1">Chưa có câu sai nào!</h2>
+        <p class="text-[13.5px] text-sakuraMuted dark:text-berryMuted max-w-[260px] mb-4">Mỗi khi làm nhầm câu nào, hệ thống sẽ tự động gom vào đây để bạn ôn lại.</p>
+        <button onclick="switchTab('home')" class="px-5 py-3 rounded-[15px] pink-gradient text-white font-extrabold text-[14px] shadow-roseGlow active:scale-95 transition">
+          Quay lại Học Thuộc
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  const filterBar = [0, 1, 2, 3, 4, 5].map(p => {
+    const cnt = p === 0 ? allWrongQs.length : allWrongQs.filter(q => q.part === p).length;
+    const active = wrongFilterPart === p;
+    return `
+      <button onclick="setWrongFilter(${p})" class="px-3 py-1.5 rounded-full text-[12px] font-extrabold shrink-0 border transition active:scale-95 ${active ? 'pink-gradient text-white border-transparent shadow-xs' : 'bg-sakuraCard dark:bg-berryCard border-sakuraBorder dark:border-berryBorder text-sakuraMuted dark:text-berryMuted'}">
+        ${p === 0 ? `Tất cả (${cnt})` : `P${p} (${cnt})`}
+      </button>
+    `;
+  }).join('');
+
+  const listHtml = filteredQs.map(q => `
+    <div class="bg-sakuraCard dark:bg-berryCard rounded-[18px] p-3.5 border border-sakuraBorder/80 dark:border-berryBorder shadow-rose">
+      <div class="flex items-center justify-between gap-2 mb-1.5">
+        <span class="px-2 py-0.5 rounded-md bg-sakuraSoft dark:bg-berrySoft text-sakuraPrimary dark:text-sakuraLight text-[11px] font-extrabold">Part ${q.part} • Đề ${q.test} • Câu ${q.num}</span>
+        <button onclick="removeWrongItem('${q.id}')" class="text-[11.5px] font-bold text-sakuraMuted dark:text-berryMuted hover:text-sakuraPrimary">Đã nhớ ✕</button>
+      </div>
+      <p class="text-[13.5px] font-semibold line-clamp-2 mb-2">${escapeHtml(q.prompt)}</p>
+      <div class="text-[12px] font-bold text-mintText dark:text-emerald-400 bg-mintBg/70 dark:bg-emerald-950/30 px-2.5 py-1.5 rounded-[10px]">
+        ✓ Đáp án: ${escapeHtml(q.options[q.ans])}
+      </div>
+    </div>
+  `).join('');
+
+  container.innerHTML = `
+    <div class="anim-view p-4 space-y-3 pb-8">
+      <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">${filterBar}</div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="startWrongSession()" ${filteredQs.length === 0 ? 'disabled' : ''} class="py-3 px-3 rounded-[16px] pink-gradient text-white font-extrabold text-[13.5px] shadow-roseGlow active:scale-95 transition disabled:opacity-40">
+          🔥 Ôn lại (${filteredQs.length} câu)
+        </button>
+        <button onclick="clearAllWrong()" class="py-3 px-3 rounded-[16px] bg-sakuraCard dark:bg-berryCard border border-sakuraBorder dark:border-berryBorder text-sakuraMuted dark:text-berryMuted font-extrabold text-[13.5px] active:scale-95 transition">
+          Xoá danh sách
+        </button>
+      </div>
+
+      <div class="space-y-2.5">
+        ${listHtml || '<p class="text-center text-[13px] text-sakuraMuted py-8">Không có câu sai ở Part này.</p>'}
+      </div>
+    </div>
+  `;
+}
+
+function removeWrongItem(id) {
+  delete state.wrong[id];
+  saveState();
+  updateWrongBadge();
+  renderWrongTab(document.getElementById('main-content'));
+}
+
+function clearAllWrong() {
+  showConfirm('Xoá toàn bộ câu sai?', 'Danh sách câu sai sẽ được làm trống.', () => {
+    state.wrong = {};
+    saveState();
+    updateWrongBadge();
+    renderWrongTab(document.getElementById('main-content'));
+    showToast('Đã xoá sạch danh sách câu sai');
+  });
+}
+
+// ============================================================================
+// 8. MOCK EXAM TAB (35 QUESTIONS • 45 MINUTES • 30-POINT SCALE)
+// ============================================================================
+function renderExamTab(container) {
+  container.innerHTML = `
+    <div class="anim-view p-4 space-y-4 pb-8">
+      <div class="bg-sakuraCard dark:bg-berryCard rounded-[24px] p-5 shadow-rose border border-sakuraBorder/80 dark:border-berryBorder space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-[16px] pink-gradient text-white flex items-center justify-center text-[22px] shadow-roseGlow shrink-0">⏱️</div>
+          <div>
+            <h2 class="text-[17px] font-extrabold">Đề Thi Thử Đọc B1</h2>
+            <p class="text-[12.5px] text-sakuraMuted dark:text-berryMuted">Mô phỏng cấu trúc & thang điểm thật</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <div class="p-3 rounded-[16px] pink-gradient-soft border border-sakuraBorder/70 dark:border-berryBorder">
+            <div class="text-[18px] font-black text-sakuraPrimary dark:text-sakuraLight">35</div>
+            <div class="text-[11px] font-bold text-sakuraMuted dark:text-berryMuted">Câu hỏi</div>
+          </div>
+          <div class="p-3 rounded-[16px] pink-gradient-soft border border-sakuraBorder/70 dark:border-berryBorder">
+            <div class="text-[18px] font-black text-sakuraPrimary dark:text-sakuraLight">45p</div>
+            <div class="text-[11px] font-bold text-sakuraMuted dark:text-berryMuted">Thời gian</div>
+          </div>
+          <div class="p-3 rounded-[16px] pink-gradient-soft border border-sakuraBorder/70 dark:border-berryBorder">
+            <div class="text-[18px] font-black text-sakuraPrimary dark:text-sakuraLight">30đ</div>
+            <div class="text-[11px] font-bold text-sakuraMuted dark:text-berryMuted">Đạt ≥ 20đ</div>
+          </div>
+        </div>
+
+        <div class="space-y-1.5 text-[12.5px] text-sakuraMuted dark:text-berryMuted bg-sakuraBg/80 dark:bg-berryBg/70 p-3.5 rounded-[16px] border border-sakuraBorder/60 dark:border-berryBorder">
+          <div>• <b>Part 1 (5 câu):</b> 0.5 điểm/câu (2.5đ)</div>
+          <div>• <b>Part 2 (5 câu):</b> 0.5 điểm/câu (2.5đ)</div>
+          <div>• <b>Part 3 (10 câu):</b> 0.5 điểm/câu (5.0đ)</div>
+          <div>• <b>Part 4 (5 câu):</b> 0.5 điểm/câu (2.5đ)</div>
+          <div>• <b>Part 5 (10 câu):</b> 1.25 điểm/câu (12.5đ) — <i>Tổng 30 điểm</i></div>
+        </div>
+
+        <button onclick="startExamSession()" class="w-full py-3.5 rounded-[16px] pink-gradient text-white font-extrabold text-[15px] shadow-roseGlow active:scale-95 transition">
+          ✨ Bắt đầu làm bài thi thử
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================================
+// 9. SETTINGS TAB
+// ============================================================================
+function renderSettingsTab(container) {
+  const masteredCount = Object.keys(state.mastered).length;
+  const total = QUESTIONS.length;
+  const pct = Math.round((masteredCount / total) * 100);
+  const fontLabels = { sm: 'Nhỏ', md: 'Vừa', lg: 'Lớn' };
+
+  container.innerHTML = `
+    <div class="anim-view p-4 space-y-3.5 pb-8">
+      <!-- Quick Progress Banner -->
+      <div class="bg-sakuraCard dark:bg-berryCard rounded-[22px] p-4 shadow-rose border border-sakuraBorder/80 dark:border-berryBorder">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[13px] font-extrabold">Tiến độ học thuộc</span>
+          <span class="text-[14px] font-black text-sakuraPrimary dark:text-sakuraLight tabular-nums">${masteredCount}/${total} (${pct}%)</span>
+        </div>
+        <div class="w-full h-2.5 rounded-full bg-sakuraSoft dark:bg-berrySoft overflow-hidden">
+          <div class="h-full pink-gradient rounded-full" style="width:${pct}%"></div>
+        </div>
+      </div>
+
+      <!-- Study Behavior Settings -->
+      <div class="bg-sakuraCard dark:bg-berryCard rounded-[22px] p-4 shadow-rose border border-sakuraBorder/80 dark:border-berryBorder space-y-4">
+        <h3 class="text-[12px] font-extrabold uppercase tracking-wider text-sakuraMuted dark:text-berryMuted">Chế độ Học Thuộc</h3>
+
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="font-bold text-[14.5px]">Tự qua câu khi đúng</div>
+            <div class="text-[12px] text-sakuraMuted dark:text-berryMuted">Tự chuyển câu tiếp sau 0.7 giây</div>
+          </div>
+          <button onclick="toggleSetting('autoNext')" class="pink-switch ${state.settings.autoNext ? 'active' : 'bg-pink-200 dark:bg-berryBorder'}"></button>
+        </div>
+
+        <div class="border-t border-sakuraBorder/50 dark:border-berryBorder pt-3.5 flex items-center justify-between gap-3">
+          <div>
+            <div class="font-bold text-[14.5px]">Chế độ Học Thuộc (Hiện sẵn đáp án)</div>
+            <div class="text-[12px] text-sakuraMuted dark:text-berryMuted">Tô xanh đáp án & mẹo nhớ để lướt nhanh</div>
+          </div>
+          <button onclick="toggleSetting('studyPeek')" class="pink-switch ${state.settings.studyPeek ? 'active' : 'bg-pink-200 dark:bg-berryBorder'}"></button>
+        </div>
+
+        <div class="border-t border-sakuraBorder/50 dark:border-berryBorder pt-3.5 flex items-center justify-between gap-3">
+          <div>
+            <div class="font-bold text-[14.5px]">Trộn ngẫu nhiên thứ tự câu</div>
+            <div class="text-[12px] text-sakuraMuted dark:text-berryMuted">Chống nhớ theo vị trí 1-2-3</div>
+          </div>
+          <button onclick="toggleSetting('shuffle')" class="pink-switch ${state.settings.shuffle ? 'active' : 'bg-pink-200 dark:bg-berryBorder'}"></button>
+        </div>
+      </div>
+
+      <!-- Display Settings -->
+      <div class="bg-sakuraCard dark:bg-berryCard rounded-[22px] p-4 shadow-rose border border-sakuraBorder/80 dark:border-berryBorder space-y-4">
+        <h3 class="text-[12px] font-extrabold uppercase tracking-wider text-sakuraMuted dark:text-berryMuted">Giao diện iPhone 13</h3>
+
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="font-bold text-[14.5px]">Cỡ chữ câu hỏi</div>
+            <div class="text-[12px] text-sakuraMuted dark:text-berryMuted">Hiện tại: ${fontLabels[state.settings.fontSize || 'md']}</div>
+          </div>
+          <button onclick="cycleFontSize()" class="px-3.5 py-1.5 rounded-full bg-sakuraSoft dark:bg-berrySoft text-sakuraPrimary dark:text-sakuraLight font-extrabold text-[13px] active:scale-95 transition">A± Đổi cỡ</button>
+        </div>
+
+        <div class="border-t border-sakuraBorder/50 dark:border-berryBorder pt-3.5 flex items-center justify-between gap-3">
+          <div>
+            <div class="font-bold text-[14.5px]">Chừa chỗ badge Netlify</div>
+            <div class="text-[12px] text-sakuraMuted dark:text-berryMuted">Đẩy thanh menu lên tránh bị che ở góc dưới</div>
+          </div>
+          <button onclick="toggleSetting('badgeClearance')" class="pink-switch ${state.settings.badgeClearance ? 'active' : 'bg-pink-200 dark:bg-berryBorder'}"></button>
+        </div>
+      </div>
+
+      <!-- Reset Progress -->
+      <button onclick="resetProgress()" class="w-full py-3.5 rounded-[18px] bg-coralBg dark:bg-red-950/40 border border-coralBorder/80 dark:border-red-900 text-coralText dark:text-red-300 font-extrabold text-[14px] active:scale-95 transition">
+        Xoá toàn bộ tiến độ đã lưu
+      </button>
+    </div>
+  `;
+}
+
+function resetProgress() {
+  showConfirm('Đặt lại toàn bộ dữ liệu?', 'Tiến độ đã thuộc và câu sai sẽ về 0.', () => {
+    state.mastered = {};
+    state.wrong = {};
+    state.todayCount = 0;
+    state.lastSession = null;
+    saveState();
+    updateWrongBadge();
+    renderMain();
+    showToast('Đã đặt lại tiến độ');
+  });
+}
+
+// ============================================================================
+// 10. STARTING STUDY & EXAM SESSIONS
+// ============================================================================
+function shuffleArray(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function launchStudySession(qs, label, meta) {
+  if (!qs || qs.length === 0) {
+    showToast('Không có câu hỏi phù hợp');
+    return;
+  }
+  const finalQs = state.settings.shuffle ? shuffleArray(qs) : [...qs];
+  state.lastSession = { label, meta };
+  saveState();
+
+  session = {
+    mode: 'study',
+    title: label,
+    questions: finalQs,
+    idx: 0,
+    answers: {},
+    revealed: {},
+    submitted: false
+  };
+  swipeDir = 'anim-view';
+  renderMain();
+}
+
+function startPartSession(partNum) {
+  const qs = QUESTIONS.filter(q => q.part === partNum);
+  launchStudySession(qs, `Part ${partNum} • Toàn bộ`, { type: 'part', part: partNum });
+}
+
+function startTestSession(partNum, testNum) {
+  const qs = QUESTIONS.filter(q => q.part === partNum && q.test === testNum);
+  launchStudySession(qs, `Part ${partNum} • Đề ${testNum}`, { type: 'test', part: partNum, test: testNum });
+}
+
+function startMixSession() {
+  const selected = [1, 2, 3, 4, 5].filter(p => mixSelectedParts[p]);
+  if (selected.length === 0) return;
+  let qs = QUESTIONS.filter(q => mixSelectedParts[q.part]);
+  if (mixCountLimit > 0) {
+    qs = shuffleArray(qs).slice(0, mixCountLimit);
+  } else if (state.settings.shuffle) {
+    qs = shuffleArray(qs);
+  }
+  const label = `Gộp P${selected.join('+')} (${qs.length} câu)`;
+  state.lastSession = { label, meta: { type: 'mix', parts: selected, limit: mixCountLimit } };
+  saveState();
+
+  session = {
+    mode: 'study',
+    title: label,
+    questions: qs,
+    idx: 0,
+    answers: {},
+    revealed: {},
+    submitted: false
+  };
+  swipeDir = 'anim-view';
+  renderMain();
+}
+
+function startWrongSession() {
+  const allWrongQs = QUESTIONS.filter(q => state.wrong[q.id]);
+  const qs = wrongFilterPart === 0 ? allWrongQs : allWrongQs.filter(q => q.part === wrongFilterPart);
+  launchStudySession(qs, `Ôn Câu Sai (${qs.length} câu)`, { type: 'wrong' });
+}
+
+function resumeLastSession() {
+  if (!state.lastSession || !state.lastSession.meta) return;
+  const m = state.lastSession.meta;
+  if (m.type === 'part') startPartSession(m.part);
+  else if (m.type === 'test') startTestSession(m.part, m.test);
+  else if (m.type === 'mix') {
+    mixSelectedParts = { 1: false, 2: false, 3: false, 4: false, 5: false };
+    (m.parts || [1]).forEach(p => mixSelectedParts[p] = true);
+    mixCountLimit = m.limit || 0;
+    startMixSession();
+  } else {
+    startWrongSession();
+  }
+}
+
+function startExamSession() {
+  const pickTest = (p, maxT) => Math.floor(Math.random() * maxT) + 1;
+  const p1 = QUESTIONS.filter(q => q.part === 1 && q.test === pickTest(1, 6));
+  const p2 = QUESTIONS.filter(q => q.part === 2 && q.test === pickTest(2, 5));
+  const p3 = QUESTIONS.filter(q => q.part === 3 && q.test === pickTest(3, 10));
+  const p4 = QUESTIONS.filter(q => q.part === 4 && q.test === pickTest(4, 10));
+  const p5 = QUESTIONS.filter(q => q.part === 5 && q.test === pickTest(5, 10));
+  const examQs = [...p1, ...p2, ...p3, ...p4, ...p5];
+
+  session = {
+    mode: 'exam',
+    title: 'Thi Thử B1',
+    questions: examQs,
+    idx: 0,
+    answers: {},
+    revealed: {},
+    submitted: false,
+    timerSec: 45 * 60,
+    timerId: null
+  };
+
+  session.timerId = setInterval(() => {
+    if (!session || session.mode !== 'exam' || session.submitted) return;
+    session.timerSec--;
+    updateTimerDisplay();
+    if (session.timerSec <= 0) {
+      submitExam(true);
+    }
+  }, 1000);
+
+  swipeDir = 'anim-view';
+  renderMain();
+  updateTimerDisplay();
+}
+
+function stopExamTimer() {
+  if (session && session.timerId) {
+    clearInterval(session.timerId);
+    session.timerId = null;
+  }
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('exam-timer');
+  if (!session || session.mode !== 'exam') return;
+  const m = Math.floor(Math.max(0, session.timerSec) / 60);
+  const s = Math.max(0, session.timerSec) % 60;
+  el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+// ============================================================================
+// 11. QUIZ & EXAM VIEW RENDERING
+// ============================================================================
+function renderQuizView(container) {
+  if (session.mode === 'exam' && session.submitted) {
+    renderExamResult(container);
+    return;
+  }
+
+  const q = session.questions[session.idx];
+  const total = session.questions.length;
+  const isExam = session.mode === 'exam';
+  const progressPct = Math.round(((session.idx + 1) / total) * 100);
+
+  setHeader(
+    isExam ? `Thi Thử • Câu ${session.idx + 1}/${total}` : session.title,
+    `Part ${q.part} • Đề ${q.test}`,
+    true,
+    session.title
+  );
+
+  const userAns = session.answers[q.id];
+  const isAnswered = userAns !== undefined;
+  const isPeek = !isExam && state.settings.studyPeek;
+  const showTip = !isExam && (isAnswered || isPeek) && q.tip;
+
+  const letters = ['A', 'B', 'C', 'D', 'E'];
+  const pillActive = 'pink-gradient text-white border-transparent shadow-xs';
+  const pillIdle = 'bg-sakuraSoft/80 dark:bg-berrySoft border-sakuraBorder dark:border-berryBorder text-sakuraPrimary dark:text-sakuraLight';
+
+  const optionsHtml = q.options.map((optText, idx) => {
+    let cardCls = 'bg-sakuraCard dark:bg-berryCard border-sakuraBorder/90 dark:border-berryBorder text-sakuraText dark:text-berryText';
+    let badgeCls = 'bg-sakuraSoft dark:bg-berrySoft text-sakuraPrimary dark:text-sakuraLight';
+
+    if (isExam) {
+      if (userAns === idx) {
+        cardCls = 'pink-gradient-soft border-sakuraPrimary dark:border-sakuraLight text-sakuraText dark:text-berryText ring-2 ring-sakuraPrimary/25';
+        badgeCls = 'pink-gradient text-white';
+      }
+    } else {
+      if (isAnswered) {
+        if (idx === q.ans) {
+          cardCls = 'bg-mintBg dark:bg-emerald-950/45 border-mintBorder dark:border-emerald-600 text-mintText dark:text-emerald-200 font-bold';
+          badgeCls = 'bg-mintText text-white';
+        } else if (idx === userAns && userAns !== q.ans) {
+          cardCls = 'bg-coralBg dark:bg-red-950/45 border-coralBorder dark:border-red-700 text-coralText dark:text-red-200';
+          badgeCls = 'bg-coralText text-white';
+        }
+      } else if (isPeek && idx === q.ans) {
+        cardCls = 'bg-mintBg/75 dark:bg-emerald-950/35 border-mintBorder dark:border-emerald-700 text-mintText dark:text-emerald-200 font-bold';
+        badgeCls = 'bg-mintText text-white';
+      }
+    }
+
+    const optLabel = q.part === 3 ? (idx === 0 ? 'T' : 'F') : letters[idx];
+
+    return `
+      <button id="opt-btn-${idx}" onclick="selectOption(${idx})" class="q-opt w-full min-h-[54px] p-3.5 rounded-[16px] border text-left transition active:scale-[0.985] flex items-center gap-3 shadow-xs ${cardCls}">
+        <span class="w-8 h-8 rounded-[11px] flex items-center justify-center font-black text-[13.5px] shrink-0 ${badgeCls}">${optLabel}</span>
+        <span class="leading-snug flex-1">${escapeHtml(optText)}</span>
+      </button>
+    `;
+  }).join('');
+
+  const tipHtml = showTip ? `
+    <div class="anim-view mt-3 p-3.5 rounded-[16px] pink-gradient-soft border border-sakuraBorder dark:border-berryBorder text-sakuraText dark:text-berryText text-[13px] leading-snug shadow-xs">
+      <span class="font-extrabold text-sakuraPrimary dark:text-sakuraLight">💡 Mẹo học thuộc: </span>${escapeHtml(q.tip)}
+    </div>
+  ` : '';
+
+  const passageBtnHtml = q.passageKey ? `
+    <button onclick="openPassageSheet('${q.passageKey}', ${q.part === 5 ? q.num : 0})" class="px-3 py-1.5 rounded-full pink-gradient text-white text-[12px] font-extrabold shadow-xs active:scale-95 transition flex items-center gap-1 shrink-0">
+      <span>📄 Xem bài đọc</span>
+    </button>
+  ` : '';
+
+  const rightActionBtn = isExam && session.idx === total - 1
+    ? `<button onclick="confirmSubmitExam()" class="flex-1 py-3.5 rounded-[16px] pink-gradient text-white font-extrabold text-[14.5px] shadow-roseGlow active:scale-95 transition">Nộp bài thi ✓</button>`
+    : `<button onclick="nextQuestion()" class="flex-1 py-3.5 rounded-[16px] pink-gradient text-white font-extrabold text-[14.5px] shadow-roseGlow active:scale-95 transition">Câu tiếp →</button>`;
+
+  container.innerHTML = `
+    <div id="quiz-swipe-area" class="h-full flex flex-col justify-between">
+      <!-- Top Control Strip -->
+      <div class="px-4 pt-2.5 pb-2 space-y-2 shrink-0">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-1.5">
+            <span class="text-[12.5px] font-black text-sakuraPrimary dark:text-sakuraLight tabular-nums">Câu ${session.idx + 1}/${total}</span>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-sakuraSoft dark:bg-berrySoft text-sakuraMuted dark:text-berryMuted">P${q.part} • Đề ${q.test}</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="cycleFontSize()" class="px-2.5 py-1 rounded-full bg-sakuraCard dark:bg-berryCard border border-sakuraBorder dark:border-berryBorder text-[11.5px] font-extrabold text-sakuraMuted dark:text-berryMuted active:scale-90">A±</button>
+            <button onclick="openQMap()" class="px-2.5 py-1 rounded-full bg-sakuraCard dark:bg-berryCard border border-sakuraBorder dark:border-berryBorder text-[12px] font-extrabold text-sakuraPrimary dark:text-sakuraLight active:scale-90">☰ ${Object.keys(session.answers).length}/${total}</button>
+          </div>
+        </div>
+
+        <!-- Thin Progress Line -->
+        <div class="w-full h-1.5 rounded-full bg-sakuraSoft dark:bg-berrySoft overflow-hidden">
+          <div class="h-full pink-gradient rounded-full transition-all duration-300" style="width:${progressPct}%"></div>
+        </div>
+
+        <!-- Mode Pills -->
+        <div class="flex items-center justify-between gap-1.5">
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            ${!isExam ? `
+              <button onclick="toggleSetting('studyPeek')" class="px-2.5 py-1 rounded-full border text-[11.5px] font-extrabold transition active:scale-95 ${state.settings.studyPeek ? pillActive : pillIdle}">👀 Học thuộc</button>
+              <button onclick="toggleSetting('autoNext')" class="px-2.5 py-1 rounded-full border text-[11.5px] font-extrabold transition active:scale-95 ${state.settings.autoNext ? pillActive : pillIdle}">⚡ Tự qua</button>
+            ` : `<span class="text-[11.5px] font-bold text-sakuraMuted dark:text-berryMuted">Vuốt trái/phải đổi câu</span>`}
+          </div>
+          ${passageBtnHtml}
+        </div>
+      </div>
+
+      <!-- Scrollable Question & Options -->
+      <div class="flex-1 overflow-y-auto no-scrollbar px-4 pb-3 ${swipeDir}">
+        <div class="bg-sakuraCard dark:bg-berryCard rounded-[22px] p-4 shadow-rose border border-sakuraBorder/80 dark:border-berryBorder mb-3">
+          ${q.tag ? `<div class="text-[11px] font-extrabold uppercase tracking-wider text-sakuraPrimary dark:text-sakuraLight mb-1.5">${escapeHtml(q.tag)}</div>` : ''}
+          ${q.testTitle ? `<div class="text-[11px] font-extrabold uppercase tracking-wider text-sakuraPrimary dark:text-sakuraLight mb-1.5">${escapeHtml(q.testTitle)}</div>` : ''}
+          <p class="q-prompt font-bold text-sakuraText dark:text-berryText">${escapeHtml(q.prompt)}</p>
+        </div>
+
+        <div class="space-y-2.5">
+          ${optionsHtml}
+        </div>
+
+        ${tipHtml}
+      </div>
+
+      <!-- Bottom Thumb Navigation Bar -->
+      <div class="safe-bottom px-4 pt-2.5 bg-white/90 dark:bg-berryCard/90 backdrop-blur-xl border-t border-sakuraBorder/80 dark:border-berryBorder flex items-center gap-2.5 shrink-0">
+        <button onclick="prevQuestion()" ${session.idx === 0 ? 'disabled' : ''} class="px-4 py-3.5 rounded-[16px] bg-sakuraSoft dark:bg-berrySoft text-sakuraPrimary dark:text-sakuraLight font-extrabold text-[14px] active:scale-95 transition disabled:opacity-35">
+          ← Trước
+        </button>
+        ${rightActionBtn}
+      </div>
+    </div>
+  `;
+
+  attachSwipeHandlers();
+}
+
+function selectOption(optIdx) {
+  if (!session) return;
+  const q = session.questions[session.idx];
+  const isExam = session.mode === 'exam';
+
+  session.answers[q.id] = optIdx;
+
+  if (isExam) {
+    swipeDir = '';
+    renderQuizView(document.getElementById('main-content'));
+    return;
+  }
+
+  const isCorrect = optIdx === q.ans;
+  if (isCorrect) {
+    if (!state.mastered[q.id]) {
+      state.mastered[q.id] = true;
+      state.todayCount++;
+    }
+    if (state.wrong[q.id]) {
+      delete state.wrong[q.id];
+    }
+  } else {
+    state.wrong[q.id] = true;
+  }
+  saveState();
+  updateWrongBadge();
+
+  swipeDir = '';
+  renderQuizView(document.getElementById('main-content'));
+
+  const chosenBtn = document.getElementById(`opt-btn-${optIdx}`);
+  if (chosenBtn) {
+    chosenBtn.classList.add(isCorrect ? 'anim-correct' : 'anim-wrong');
+  }
+
+  if (isCorrect && state.settings.autoNext && session.idx < session.questions.length - 1) {
+    const curIdx = session.idx;
+    setTimeout(() => {
+      if (session && session.idx === curIdx) {
+        nextQuestion();
+      }
+    }, 680);
+  }
+}
+
+function nextQuestion() {
+  if (!session) return;
+  if (session.idx < session.questions.length - 1) {
+    session.idx++;
+    swipeDir = 'anim-next';
+    renderQuizView(document.getElementById('main-content'));
+  } else if (session.mode === 'study') {
+    showToast('🎉 Đã hoàn thành lượt học!');
+  }
+}
+
+function prevQuestion() {
+  if (!session || session.idx === 0) return;
+  session.idx--;
+  swipeDir = 'anim-prev';
+  renderQuizView(document.getElementById('main-content'));
+}
+
+function goToQuestion(index) {
+  if (!session) return;
+  swipeDir = index > session.idx ? 'anim-next' : 'anim-prev';
+  session.idx = index;
+  closeQMap();
+  renderQuizView(document.getElementById('main-content'));
+}
+
+function confirmSubmitExam() {
+  const answered = Object.keys(session.answers).length;
+  const total = session.questions.length;
+  showConfirm('Nộp bài thi thử?', `Bạn đã làm ${answered}/${total} câu. Chấm điểm ngay?`, () => {
+    submitExam(false);
+  });
+}
+
+function submitExam(autoTimeout) {
+  stopExamTimer();
+  session.submitted = true;
+  if (autoTimeout) showToast('⏰ Đã hết giờ làm bài!');
+  renderQuizView(document.getElementById('main-content'));
+}
+
+function renderExamResult(container) {
+  setHeader('Kết Quả Thi Thử B1 🏆', 'Thang điểm chuẩn 30 điểm', true, 'Kết quả thi');
+  let rawScore = 0;
+  let correctCount = 0;
+
+  session.questions.forEach(q => {
+    const ua = session.answers[q.id];
+    const ok = ua === q.ans;
+    if (ok) {
+      correctCount++;
+      rawScore += (q.part === 5 ? 1.25 : 0.5);
+    } else if (ua !== undefined) {
+      state.wrong[q.id] = true;
+    }
+  });
+  saveState();
+  updateWrongBadge();
+
+  const finalScore = Number(rawScore.toFixed(2));
+  const passed = finalScore >= 20;
+
+  const reviewHtml = session.questions.map((q, i) => {
+    const ua = session.answers[q.id];
+    const ok = ua === q.ans;
+    return `
+      <div class="p-3.5 rounded-[16px] border ${ok ? 'bg-mintBg/60 dark:bg-emerald-950/30 border-mintBorder dark:border-emerald-800' : 'bg-coralBg/60 dark:bg-red-950/30 border-coralBorder dark:border-red-800'}">
+        <div class="flex items-center justify-between text-[11.5px] font-extrabold mb-1">
+          <span>Câu ${i + 1} (Part ${q.part})</span>
+          <span class="${ok ? 'text-mintText dark:text-emerald-400' : 'text-coralText dark:text-red-400'}">${ok ? '✓ Đúng' : '✕ Sai'}</span>
+        </div>
+        <p class="text-[13px] font-semibold mb-1.5">${escapeHtml(q.prompt)}</p>
+        <div class="text-[12px] font-bold text-mintText dark:text-emerald-300">Đáp án: ${escapeHtml(q.options[q.ans])}</div>
+        ${!ok && ua !== undefined ? `<div class="text-[11.5px] text-coralText dark:text-red-300 mt-0.5">Bạn chọn: ${escapeHtml(q.options[ua])}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="anim-view p-4 space-y-4 pb-10">
+      <div class="pink-gradient rounded-[24px] p-5 text-white text-center shadow-roseMd">
+        <div class="text-[12px] font-extrabold uppercase tracking-wider opacity-90">${passed ? '🎉 CHÚC MỪNG ĐẠT B1' : '💪 CỐ GẮNG THÊM NHÉ'}</div>
+        <div class="text-[40px] font-black leading-none my-2">${finalScore} <span class="text-[18px] font-bold opacity-85">/ 30đ</span></div>
+        <div class="text-[13px] font-bold opacity-95">Đúng ${correctCount}/${session.questions.length} câu</div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5">
+        <button onclick="startExamSession()" class="py-3 rounded-[15px] pink-gradient text-white font-extrabold text-[13.5px] shadow-roseGlow active:scale-95 transition">Thi lại đề mới</button>
+        <button onclick="switchTab('home')" class="py-3 rounded-[15px] bg-sakuraCard dark:bg-berryCard border border-sakuraBorder dark:border-berryBorder font-extrabold text-[13.5px] active:scale-95 transition">Về trang chủ</button>
+      </div>
+
+      <h3 class="font-extrabold text-[14.5px] pt-1">Chi tiết bài làm:</h3>
+      <div class="space-y-2.5">
+        ${reviewHtml}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================================
+// 12. BOTTOM SHEETS (PASSAGE, Q-MAP, QUICK PART/TEST SWITCHER)
+// ============================================================================
+function openPassageSheet(key, highlightBlankNum = 0) {
+  const p = PASSAGES[key];
+  if (!p) return;
+  document.getElementById('passage-title').textContent = p.title;
+  let html = p.text;
+  if (highlightBlankNum > 0) {
+    const token = `<b>(${highlightBlankNum})`;
+    html = html.replace(token, `<b class="px-1.5 py-0.5 rounded-md pink-gradient text-white">(${highlightBlankNum})`);
+  }
+  document.getElementById('passage-body').innerHTML = html;
+  document.getElementById('passage-backdrop').classList.add('open');
+  document.getElementById('passage-sheet').classList.add('open');
+}
+
+function closePassageSheet() {
+  document.getElementById('passage-backdrop').classList.remove('open');
+  document.getElementById('passage-sheet').classList.remove('open');
+}
+
+function openQMap() {
+  if (!session) return;
+  const total = session.questions.length;
+  document.getElementById('qmap-sub').textContent = `Đã chọn ${Object.keys(session.answers).length}/${total} câu`;
+  const grid = document.getElementById('qmap-grid');
+  grid.innerHTML = session.questions.map((q, i) => {
+    const isCur = i === session.idx;
+    const ua = session.answers[q.id];
+    let cls = 'bg-sakuraBg dark:bg-berryBg border-sakuraBorder dark:border-berryBorder text-sakuraText dark:text-berryText';
+    if (ua !== undefined) {
+      if (session.mode === 'exam') {
+        cls = 'pink-gradient-soft border-sakuraPrimary text-sakuraPrimary dark:text-sakuraLight font-black';
+      } else if (ua === q.ans) {
+        cls = 'bg-mintBg dark:bg-emerald-950/50 border-mintBorder text-mintText dark:text-emerald-300 font-black';
+      } else {
+        cls = 'bg-coralBg dark:bg-red-950/50 border-coralBorder text-coralText dark:text-red-300 font-black';
+      }
+    }
+    if (isCur) cls += ' ring-2 ring-sakuraPrimary';
+    return `<button onclick="goToQuestion(${i})" class="h-11 rounded-[13px] border text-[13.5px] font-bold flex items-center justify-center active:scale-90 transition ${cls}">${i + 1}</button>`;
+  }).join('');
+
+  document.getElementById('qmap-backdrop').classList.add('open');
+  document.getElementById('qmap-sheet').classList.add('open');
+}
+
+function closeQMap() {
+  document.getElementById('qmap-backdrop').classList.remove('open');
+  document.getElementById('qmap-sheet').classList.remove('open');
+}
+
+function openQuickSwitcher() {
+  const body = document.getElementById('switcher-body');
+  body.innerHTML = PART_META.map(pm => {
+    let testBtns = '';
+    for (let t = 1; t <= pm.tests; t++) {
+      testBtns += `<button onclick="closeQuickSwitcher(); startTestSession(${pm.part}, ${t})" class="px-2.5 py-1.5 rounded-[10px] bg-sakuraBg dark:bg-berryBg border border-sakuraBorder dark:border-berryBorder text-[12px] font-bold active:scale-95">Đề ${t}</button>`;
+    }
+    return `
+      <div class="p-3.5 rounded-[18px] bg-sakuraBg/60 dark:bg-berryBg/60 border border-sakuraBorder/80 dark:border-berryBorder space-y-2.5">
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-extrabold text-[13.5px]">${pm.icon} ${pm.name}</span>
+          <button onclick="closeQuickSwitcher(); startPartSession(${pm.part})" class="px-2.5 py-1 rounded-full pink-gradient text-white text-[11.5px] font-extrabold active:scale-95 shrink-0">Học cả Part</button>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          ${testBtns}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('switcher-backdrop').classList.add('open');
+  document.getElementById('switcher-sheet').classList.add('open');
+}
+
+function closeQuickSwitcher() {
+  document.getElementById('switcher-backdrop').classList.remove('open');
+  document.getElementById('switcher-sheet').classList.remove('open');
+}
+
+// ============================================================================
+// 13. TOUCH SWIPE GESTURES & UTILITIES
+// ============================================================================
+function attachSwipeHandlers() {
+  const el = document.getElementById('quiz-swipe-area');
+  if (!el) return;
+  let startX = 0;
+  let startY = 0;
+
+  el.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  el.addEventListener('touchend', e => {
+    if (!startX || e.changedTouches.length !== 1) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    startX = 0;
+    startY = 0;
+    if (Math.abs(dx) > 65 && Math.abs(dx) > Math.abs(dy) * 1.6) {
+      if (dx < 0) nextQuestion();
+      else prevQuestion();
+    }
+  }, { passive: true });
+}
+
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('opacity-0', 'translate-y-2');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    t.classList.add('opacity-0', 'translate-y-2');
+  }, 1900);
+}
+
+function showConfirm(title, msg, onOk) {
+  const backdrop = document.getElementById('modal-backdrop');
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-msg').textContent = msg;
+  backdrop.classList.remove('hidden');
+
+  const btnCancel = document.getElementById('modal-cancel');
+  const btnOk = document.getElementById('modal-ok');
+
+  const cleanup = () => backdrop.classList.add('hidden');
+  btnCancel.onclick = cleanup;
+  btnOk.onclick = () => {
+    cleanup();
+    onOk();
+  };
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ============================================================================
+// 14. INITIALIZE APP
+// ============================================================================
+applyThemeAndFont();
+updateWrongBadge();
+renderMain();
+</script>
+</body>
+</html>
